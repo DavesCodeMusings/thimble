@@ -6,15 +6,15 @@ from thimble import Thimble
 app = Thimble()
 
 @app.route('/')
-def hello():
+def hello(req):
     return 'Hello!'
 
 @app.route('/world')
-def hello_cleveland():
+def hello_cleveland(req):
     return 'Hello World!'
 
 @app.route('/cleveland')
-def hello_cleveland():
+def hello_cleveland(req):
     return 'Hello Cleveland!'
 
 app.run(debug=True)  # Listen on 0.0.0.0:80 by default.

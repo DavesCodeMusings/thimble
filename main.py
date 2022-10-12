@@ -3,7 +3,7 @@
 
 from thimble import Thimble
 
-app = Thimble('text/plain')
+app = Thimble()
 
 @app.route('/')
 def hello():
@@ -17,4 +17,4 @@ def hello_cleveland():
 def hello_cleveland():
     return 'Hello Cleveland!'
 
-app.run()  # Listen on 0.0.0.0:80 by default.
+app.run(debug=True)  # Listen on 0.0.0.0:80 by default.

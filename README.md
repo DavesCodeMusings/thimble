@@ -15,7 +15,7 @@ from thimble import Thimble
 app = Thimble() 
 
 @app.route('/')
-def hello():
+def hello(req):
     return 'Hello World'
 
 app.run()
@@ -23,35 +23,47 @@ app.run()
 
 Now, point your web browser to the IP of your device on the default port of 80 and you should see 'Hello World'.
 
-Beyond Hello World, here's a more useful example of reading microcontroller inputs from a web browser or REST API client.
+Beyond Hello World, here's a more useful example of exposing a GPIO pin via a REST API.
 
 ```
-from machine import Pin, ADC
+from machine import Pin
 from thimble import Thimble
-import json
 
-gpio_2 = Pin(2, Pin.IN, Pin.PULL_UP)
-adc_0 = ADC(Pin(34))
+gpio_2 = Pin(2, Pin.OUT)
 
-app = Thimble(default_content_type='application/json')
+app = Thimble()
 
-@app.route('/gpio/2')
-def get_gpio_2():
-    return json.dumps({ "value": gpio_2.value() })
+@app.route('/gpio/2', methods=['GET'])
+def get_gpio_2(req):
+    return gpio_2.value()
 
-@app.route('/adc/0')
-def get_adc_0():
-    return json.dumps({ "value": int(adc_0.read_uv() / 1000), "units": "millivolts" })
+@app.route('/gpio/2', methods=['PUT'])
+def set_gpio_2(req):
+    if (body == 1 or body == 'on'):
+        gpio_2.on()
+    elif (body == 0 or body == 'off'):
+        gpio_2.off()
+    return gpio_2.value()
 
 app.run(debug=True)  # Listens on 0.0.0.0:80 by default.
 ```
 
-Saving the code above as main.py will let read the state of GPIO 2 using the URL path of /gpio/2. You can also use /adc/0 to read the value of the analog input. (The pin assignments are for an ESP32, so be sure to adjust for other platforms.)
+Saving the code above as main.py will let you read the state of GPIO 2 using a GET method and the URL path of /gpio/2. The same path with a PUT method and `on` or `off` in the request body will change the state of GPIO 2.
+
+Try it out with your favorite REST API client or use the following `curl` commands:
+
+```
+curl -X GET -i 'http://192.168.0.43/gpio/2'
+curl -X PUT -i 'http://192.168.0.43/gpio/2' --data 0
+curl -X PUT -i 'http://192.168.0.43/gpio/2' --data 1
+```
+
+You can even get fancier by importing the `json` package so your API can return data like this: `{"value": 125, "units": "millivolts"}`
 
 ## What pitfalls do I need to be aware of?
 Using the example main.py assumes that networking is already configured by a boot.py that you supply. Thimble won't work without it. If you need help with wifi connections, see my example under [lolin32oled](https://github.com/DavesCodeMusings/esp/tree/main/lolin32oled)
 
-Thimble is in the beginning phases of development and really only supports HTTP GET. You can do POST and PUT or whatever, but currently they're all treated like a GET. There's also nothing to handle things like query parameters, URL encoding of special characters, etc.
+Thimble is in the beginning phases of development and may crash from time to time. If it does, add a Github issue and I'll see if I can fix it.
 
 ## Will it run on Microcontroller X?
-Code was developed and tested using an ESP32 with MicroPython 1.19.1. It may or may not work with other devices.
+Code is being developed and tested using a Wemos LOLIN32 (ESP32) clone with MicroPython 1.19.1. Occasionally, I will run it on a Wemos D1 Mini (ESP8266) clone. It may or may not work with other devices.

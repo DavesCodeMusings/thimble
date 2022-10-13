@@ -64,6 +64,8 @@ You can even get fancier by importing the `json` package so your API can return 
 app = Thimble(default_content_type='application/json')
 ```
 
+See [the wiki](https://github.com/DavesCodeMusings/thimble/wiki) for more examples in a step by step tutorial format.
+
 ## What pitfalls do I need to be aware of?
 Using the example main.py assumes that networking is already configured by a boot.py that you supply. Thimble won't work without it. If you need help with wifi connections, see my example under [lolin32oled](https://github.com/DavesCodeMusings/esp/tree/main/lolin32oled)
 

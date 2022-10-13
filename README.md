@@ -58,7 +58,11 @@ curl -X PUT -i 'http://192.168.0.43/gpio/2' --data 0
 curl -X PUT -i 'http://192.168.0.43/gpio/2' --data 1
 ```
 
-You can even get fancier by importing the `json` package so your API can return data like this: `{"value": 125, "units": "millivolts"}`
+You can even get fancier by importing the `json` package so your API can return data like this: `{"value": 125, "units": "millivolts"}` Just change the default content-type to JSON when you instantiate the class. Like this: 
+
+```
+app = Thimble(default_content_type='application/json')
+```
 
 ## What pitfalls do I need to be aware of?
 Using the example main.py assumes that networking is already configured by a boot.py that you supply. Thimble won't work without it. If you need help with wifi connections, see my example under [lolin32oled](https://github.com/DavesCodeMusings/esp/tree/main/lolin32oled)

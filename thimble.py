@@ -25,7 +25,33 @@ class Thimble:
         if (status_code not in Thimble.http_status_text):
             status_code = 500
         return f'HTTP/1.1 {Thimble.http_status_text[status_code]}\r\n'
-        
+
+    # Given a raw HTTP request, return a dictionary with individual elements broken out.
+    # Takes a buffer containing the HTTP request sent from the client.
+    # Returns a dictionary containing method, path, query, headers, body, etc. or None if parsing fails.
+    @staticmethod
+    def parse_http_request(req_buffer):
+        req = {}
+        try:
+            req_buffer_lines = req_buffer.decode('utf8').split('\r\n')
+            req['method'], req['target'], req['http_version'] = req_buffer_lines[0].split(' ', 2)  # Example first line: GET /page.html HTTP/1.1
+            if ('?' in req['target']):
+                req['path'], req['query'] = target.split('?')
+                req['query'] = '?' + req['query']  # Convention is to include the question mark.
+            else:
+                req['path'] = req['target']
+            req['headers'] = {}
+            for i in range(1, len(req_buffer_lines) - 1):
+                if (req_buffer_lines[i] == ''):  # Blank line signifies the end of headers.
+                    break
+                else:
+                    name, value = req_buffer_lines[i].split(':', 1)
+                    req['headers'][name.strip()] = value.strip()
+            req['body'] = req_buffer_lines[len(req_buffer_lines) - 1]  # Last line is the body (or blank if no body.)
+        except:
+            req = None
+        return req
+
     def route(self, url_path, methods=['GET']):
         def add_route(func):
             for method in methods:
@@ -41,27 +67,11 @@ class Thimble:
         while (True):
             conn, client = sock.accept()
             if (debug): print(f'Connection from: {client}')
-            req = {}
-            try:
-                req_buffer = conn.recv(self.req_buffer_size).decode('utf8').split('\r\n')
-                if (debug): print(req_buffer)
-                req_length = len(req_buffer)  # Number of lines.
-                req['method'], req['url'], req['http_version'] = req_buffer[0].split(' ', 2)  # Example first line: GET /page.html HTTP/1.1
-                req['header'] = {}
-                for i in range(1, req_length - 1):
-                    if (req_buffer[i] == ''):  # Blank line signifies the end of headers.
-                        break
-                    else:
-                        name, value = req_buffer[i].split(':', 1)
-                        req['header'][name.strip()] = value.strip()
-                req['body'] = req_buffer[req_length - 1]  # Last line is the body (or blank if no body.)
-            except:
-                req['is_valid'] = False
-            else:
-                req['is_valid'] = True
-
-            if (req['is_valid']):
-                route_key = req['method'] + req['url']  # Example: 'GET/gpio/0'
+            req_buffer = conn.recv(self.req_buffer_size)
+            req = Thimble.parse_http_request(req_buffer)
+            if (debug): print(req)
+            if (req):
+                route_key = req['method'] + req['path']  # Example: 'GET/gpio/0'
                 if (debug): print(f'Looking up route by key: {route_key}')
                 if (route_key in self.routes and callable(self.routes[route_key])):  # Is it a function in the route table?
                     res = None

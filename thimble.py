@@ -3,12 +3,15 @@
 """
 
 from socket import socket, getaddrinfo, AF_INET, SOCK_STREAM
+import uasyncio
+
 
 class Thimble:
     def __init__(self, default_content_type='text/plain', req_buffer_size=1024):
         self.routes = {}  # Dictionary to map method and URL path combinations to functions
         self.default_content_type = default_content_type
         self.req_buffer_size = req_buffer_size
+        self.debug = False
 
 
     server_name = 'Thimble (MicroPython)'  # Used in 'Server' response header.
@@ -126,8 +129,9 @@ class Thimble:
         return body, status_code
 
 
-    # Start listening for connections.
+    # Synchronous connection handler (one connection at a time.)
     def run(self, host='0.0.0.0', port=80, debug=False):
+        self.debug = debug
         sock = socket(AF_INET, SOCK_STREAM)
         sock.bind(getaddrinfo(host, port)[0][-1])
         sock.listen()
@@ -140,20 +144,53 @@ class Thimble:
             res = []
 
             conn, client = sock.accept()
-            if (debug): print(f'Connection from: {client}')
+            if (self.debug): print(f'Connection from: {client}')
             try:
                 req_buffer = conn.recv(self.req_buffer_size)
                 req = Thimble.parse_http_request(req_buffer)
             except:
-                if (debug): print(f'Unable to parse HTTP request: {req_buffer}\n')
+                if (self.debug): print(f'Unable to parse HTTP request: {req_buffer}\n')
                 body = 'Invalid Request'
                 status_code = 400
             else:
-                if (debug): print(f'Request: {req}')
-                if (debug): print(f'Looking up function for route: {req['method']} {req['path']}')
+                if (self.debug): print(f'Request: {req}')
+                if (self.debug): print(f'Looking up function for route: {req['method']} {req['path']}')
                 body, status_code = self.call_route_function(req)
                 res = Thimble.create_http_response(body, status_code, self.default_content_type)
-                if (debug): print(res)
+                if (self.debug): print(res)
                 conn.send(res)
                 conn.close()
+
+
+    # Callback for run_async
+    async def on_connect(self, reader, writer):
+        if (self.debug):
+            client_ip = writer.get_extra_info('peername')[0]  # Get just the IP address portion of the tuple.
+            print(f'Connection from client: {client_ip}')
+        req_buffer = await reader.read(self.req_buffer_size)
+        try:
+            body = req_buffer.decode('utf8')
+            req = Thimble.parse_http_request(req_buffer)
+        except:
+            if (self.debug): print(f'Unable to parse HTTP request: {req_buffer}\n')
+            body = 'Invalid Request'
+            status_code = 400
+        else:
+            if (self.debug): print(f'Request: {req}')
+            if (self.debug): print(f'Looking up function for route: {req['method']} {req['path']}')
+            body, status_code = self.call_route_function(req)
+            res = Thimble.create_http_response(body, status_code, self.default_content_type)
+            if (self.debug): print(res)
+            writer.write(res)
+            await writer.drain()
+            reader.wait_closed()
+            writer.close()
+            if (self.debug): print(f'Connection closed for {client_ip}')
+
+
+    # Asynchronous connection handler (multiple simultaneous connections.)
+    def run_async(self, host='0.0.0.0', port=80, loop=None, debug=False):
+        self.debug = debug
+        server = uasyncio.start_server(self.on_connect, host, port, 5)
+        loop.create_task(server)
 

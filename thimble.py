@@ -3,7 +3,7 @@
 """
 
 from socket import socket, getaddrinfo, AF_INET, SOCK_STREAM
-import uasyncio
+from uasyncio import start_server
 
 
 class Thimble:
@@ -191,6 +191,6 @@ class Thimble:
     # Asynchronous connection handler (multiple simultaneous connections.)
     def run_async(self, host='0.0.0.0', port=80, loop=None, debug=False):
         self.debug = debug
-        server = uasyncio.start_server(self.on_connect, host, port, 5)
+        server = start_server(self.on_connect, host, port, 5)
         loop.create_task(server)
 

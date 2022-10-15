@@ -9,7 +9,9 @@ class Thimble:
         self.routes = {}  # Dictionary to map method and URL path combinations to functions
         self.default_content_type = default_content_type
         self.req_buffer_size = req_buffer_size
-        self.server_name = 'Thimble (MicroPython)'
+
+
+    server_name = 'Thimble (MicroPython)'  # Used in 'Server' response header.
 
 
     # HTTP responses consist of a numeric code sent with a textual description, so here's a subset.
@@ -74,6 +76,21 @@ class Thimble:
         return req
 
 
+    # Given a body string, HTTP response code, and content-type, add necessary headers and format the server's response.
+    @staticmethod
+    def create_http_response(body, status_code, content_type):
+        res_lines = []  # Build response as individual lines and worry about line-endings later.
+        res_lines.append(Thimble.http_response_status(status_code))
+        res_lines.append(f'Content-Length: {len(body)}')
+        res_lines.append(f'Content-Type: {content_type}')
+        res_lines.append(f'Server: {Thimble.server_name}')
+        res_lines.append('Connection: close')
+        res_lines.append('')
+        res_lines.append(f'{body}')
+
+        return '\r\n'.join(res_lines)
+
+
     # Given a path and list of zero or more HTTP methods, add the decorated function to the route table. 
     def route(self, url_path, methods=['GET']):
         def add_route(func):
@@ -135,14 +152,8 @@ class Thimble:
                 if (debug): print(f'Request: {req}')
                 if (debug): print(f'Looking up function for route: {req['method']} {req['path']}')
                 body, status_code = self.call_route_function(req)
-                res.append(Thimble.http_response_status(status_code))
-                res.append(f'Content-Length: {len(body)}')
-                res.append(f'Content-Type: {self.default_content_type}')
-                res.append(f'Server: {self.server_name}')
-                res.append('Connection: close')
-                res.append('')
-                res.append(f'{body}')
-                if (debug): print('\r\n'.join(res))
-                conn.send('\r\n'.join(res))
+                res = Thimble.create_http_response(body, status_code, self.default_content_type)
+                if (debug): print(res)
+                conn.send(res)
                 conn.close()
 

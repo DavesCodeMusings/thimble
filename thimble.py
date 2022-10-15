@@ -115,17 +115,14 @@ class Thimble:
             try:
                 result = self.routes[route_key](req)  # Execute function in routing table, passing request parameters.
                 if (isinstance(result, tuple)):  # User-defined functions can respond with a body, status code tuple or just a body.
-                    body = res[0]
+                    body = str(res[0])
                     status_code = res[1]
                 else:
-                    body = result
+                    body = str(result)
                     status_code = 200  # Assume 200 OK when it's just a body in the response.
             except:
                 status_code = 500
 
-        if (not isinstance(body, str)):
-            body = str(body)
-                
         return body, status_code
 
 
@@ -192,4 +189,3 @@ class Thimble:
         self.debug = debug
         server = start_server(self.on_connect, host, port, 5)
         loop.create_task(server)
-

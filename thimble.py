@@ -167,9 +167,8 @@ class Thimble:
         if (self.debug):
             client_ip = writer.get_extra_info('peername')[0]  # Get just the IP address portion of the tuple.
             print(f'Connection from client: {client_ip}')
-        req_buffer = await reader.read(self.req_buffer_size)
         try:
-            body = req_buffer.decode('utf8')
+            req_buffer = await reader.read(self.req_buffer_size)
             req = Thimble.parse_http_request(req_buffer)
         except:
             if (self.debug): print(f'Unable to parse HTTP request: {req_buffer}\n')

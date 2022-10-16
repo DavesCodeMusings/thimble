@@ -1,0 +1,4 @@
+AP_NAME = 'Lab'
+AP_PASS = 'ComboPlate'
+CONNECT_TIMEOUT = 45
+WEBREPL_PASS = 'P@ssw0rd'

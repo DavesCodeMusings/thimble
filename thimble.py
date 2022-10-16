@@ -96,6 +96,18 @@ class Thimble:
         return '\r\n'.join(res_lines)
 
 
+    # In the absence of a types module, determine if route functions should be awaited or not by
+    # comparing their type to known async and regular functions.
+    @staticmethod
+    def is_async(func):
+        if (type(func) == type(Thimble.on_connect)):
+            return True  # It's an async function
+        elif(type(func) == type(Thimble.run)):
+            return False # It's a regular function
+        else:
+            return None  # It's not a function
+
+
     # Given a path and list of zero or more HTTP methods, add the decorated function to the route table. 
     def route(self, url_path, methods=['GET']):
         def add_route(func):
@@ -130,15 +142,16 @@ class Thimble:
                 else:
                     try:
                         func_result = self.routes[route_key](req)  # Execute function in routing table, passing request parameters.
-                        if (self.debug): print(f'Function result: {func_result}')
+                    except Exception as ex:
+                        print(f'Function call failed: {ex}')
+                        res = Thimble.format_http_response('', 500, 'text/plain')
+                    else:
                         if (isinstance(func_result, tuple)):  # User-defined functions can respond with a body, status code tuple or just a body.
                             res = Thimble.format_http_response(func_result[0], func_result[1], self.default_content_type)
                         else:
                             res = Thimble.format_http_response(func_result, 200, self.default_content_type)
-                    except Exception as ex:
-                        print(f'Function call failed: {ex}')
-                        res = Thimble.format_http_response('', 500, 'text/plain')
 
+                if (self.debug): print(f'Response:\n{res}')
                 conn.send(res)
                 conn.close()
 
@@ -159,18 +172,23 @@ class Thimble:
             if (not route_key in self.routes):  # No function in the route table?
                 res = Thimble.format_http_response(f'No route found for: {route_key}', 404, 'text/plain')
             else:
+                if (self.debug): print(f'Async function? {Thimble.is_async(self.routes[route_key])}')
                 try:
-                    func_result = self.routes[route_key](req)  # Execute function in routing table, passing request parameters.
-                    if (self.debug): print(f'Function result: {func_result}')
+                    if (Thimble.is_async(self.routes[route_key]) == True):
+                        func_result = await self.routes[route_key](req)
+                    else:
+                        func_result = self.routes[route_key](req)
+                except Exception as ex:
+                    print(f'Function call failed: {ex}')
+                    res = Thimble.format_http_response('', 500, 'text/plain')
+                else:
                     if (isinstance(func_result, tuple)):  # User-defined functions can respond with a body, status code tuple or just a body.
                         res = Thimble.format_http_response(func_result[0], func_result[1], self.default_content_type)
                     else:
                         res = Thimble.format_http_response(func_result, 200, self.default_content_type)
-                except Exception as ex:
-                    print(f'Function call failed: {ex}')
-                    res = Thimble.format_http_response('', 500, 'text/plain')
 
-            if (self.debug): print(res)
+
+            if (self.debug): print(f'Response:\n{res}')
             writer.write(res)
             await writer.drain()
             reader.wait_closed()

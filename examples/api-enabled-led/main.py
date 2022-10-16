@@ -13,9 +13,9 @@ def get_gpio_2(req):
 
 @app.route('/gpio/2', methods=['PUT'])
 def set_gpio_2(req):
-    if (body == 1 or body == 'on'):
+    if (req['body'] == '1' or erq['body'] == 'on'):
         gpio_2.on()
-    elif (body == 0 or body == 'off'):
+    elif (req['body'] == '0' or req['body'] == 'off'):
         gpio_2.off()
     return gpio_2.value()
 

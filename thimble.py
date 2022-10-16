@@ -81,7 +81,9 @@ class Thimble:
 
     # Given a body string, HTTP response code, and content-type, add necessary headers and format the server's response.
     @staticmethod
-    def create_http_response(body, status_code, content_type):
+    def format_http_response(body, status_code, content_type):
+        if (isinstance(body, str) == False):
+            body = str(body)
         res_lines = []  # Build response as individual lines and worry about line-endings later.
         res_lines.append(Thimble.http_response_status(status_code))
         res_lines.append(f'Content-Length: {len(body)}')
@@ -102,59 +104,41 @@ class Thimble:
         return add_route
 
 
-    # Given the method and path of an HTTP request, look up the function in the route table and execute it.
-    # Returns (body, status_code) tuple. Example: ("Hello!", 200) or ("", 404) if no route or ("", 500) on error.
-    def call_route_function(self, req):
-        route_key = req['method'] + req['path']
-        body = ''
-        status_code = 0
-
-        if (not route_key in self.routes or not callable(self.routes[route_key])):  # No function in the route table?
-            status_code = 404
-        else:
-            try:
-                result = self.routes[route_key](req)  # Execute function in routing table, passing request parameters.
-                if (isinstance(result, tuple)):  # User-defined functions can respond with a body, status code tuple or just a body.
-                    body = str(res[0])
-                    status_code = res[1]
-                else:
-                    body = str(result)
-                    status_code = 200  # Assume 200 OK when it's just a body in the response.
-            except:
-                status_code = 500
-
-        return body, status_code
-
-
     # Synchronous connection handler (one connection at a time.)
     def run(self, host='0.0.0.0', port=80, debug=False):
         self.debug = debug
+        print(f'Starting listener on {host}:{port}')
         sock = socket(AF_INET, SOCK_STREAM)
         sock.bind(getaddrinfo(host, port)[0][-1])
         sock.listen()
-        print(f'Listening on {host}:{port}')
 
         while (True):
-            req = None
-            body = None
-            status_code = None
-            res = []
-
             conn, client = sock.accept()
-            if (self.debug): print(f'Connection from: {client}')
+            client_ip = client[0]
+            if (self.debug): print(f'Connection from: {client_ip}')
             try:
                 req_buffer = conn.recv(self.req_buffer_size)
                 req = Thimble.parse_http_request(req_buffer)
-            except:
-                if (self.debug): print(f'Unable to parse HTTP request: {req_buffer}\n')
-                body = 'Invalid Request'
-                status_code = 400
+            except Exception as ex:
+                print(f'Unable to parse request: {ex}')
+                res = Thimble.format_http_response('', 400, 'text/plain')
             else:
-                if (self.debug): print(f'Request: {req}')
-                if (self.debug): print(f'Looking up function for route: {req['method']} {req['path']}')
-                body, status_code = self.call_route_function(req)
-                res = Thimble.create_http_response(body, status_code, self.default_content_type)
-                if (self.debug): print(res)
+                route_key = req['method'] + req['path']
+                if (not route_key in self.routes):  # No function in the route table?
+                    print(f'No route found for: {route_key}')
+                    res = Thimble.format_http_response('', 404, 'text/plain')
+                else:
+                    try:
+                        func_result = self.routes[route_key](req)  # Execute function in routing table, passing request parameters.
+                        if (self.debug): print(f'Function result: {func_result}')
+                        if (isinstance(func_result, tuple)):  # User-defined functions can respond with a body, status code tuple or just a body.
+                            res = Thimble.format_http_response(func_result[0], func_result[1], self.default_content_type)
+                        else:
+                            res = Thimble.format_http_response(func_result, 200, self.default_content_type)
+                    except Exception as ex:
+                        print(f'Function call failed: {ex}')
+                        res = Thimble.format_http_response('', 500, 'text/plain')
+
                 conn.send(res)
                 conn.close()
 
@@ -167,15 +151,25 @@ class Thimble:
         try:
             req_buffer = await reader.read(self.req_buffer_size)
             req = Thimble.parse_http_request(req_buffer)
-        except:
-            if (self.debug): print(f'Unable to parse HTTP request: {req_buffer}\n')
-            body = 'Invalid Request'
-            status_code = 400
+        except Exception as ex:
+            print(f'Unable to parse request: {ex}')
+            res = Thimble.format_http_response('', 400, 'text/plain')
         else:
-            if (self.debug): print(f'Request: {req}')
-            if (self.debug): print(f'Looking up function for route: {req['method']} {req['path']}')
-            body, status_code = self.call_route_function(req)
-            res = Thimble.create_http_response(body, status_code, self.default_content_type)
+            route_key = req['method'] + req['path']
+            if (not route_key in self.routes):  # No function in the route table?
+                res = Thimble.format_http_response(f'No route found for: {route_key}', 404, 'text/plain')
+            else:
+                try:
+                    func_result = self.routes[route_key](req)  # Execute function in routing table, passing request parameters.
+                    if (self.debug): print(f'Function result: {func_result}')
+                    if (isinstance(func_result, tuple)):  # User-defined functions can respond with a body, status code tuple or just a body.
+                        res = Thimble.format_http_response(func_result[0], func_result[1], self.default_content_type)
+                    else:
+                        res = Thimble.format_http_response(func_result, 200, self.default_content_type)
+                except Exception as ex:
+                    print(f'Function call failed: {ex}')
+                    res = Thimble.format_http_response('', 500, 'text/plain')
+
             if (self.debug): print(res)
             writer.write(res)
             await writer.drain()
@@ -187,5 +181,7 @@ class Thimble:
     # Asynchronous connection handler (multiple simultaneous connections.)
     def run_async(self, host='0.0.0.0', port=80, loop=None, debug=False):
         self.debug = debug
+        print(f'Starting asynchronous listener on {host}:{port}')
         server = start_server(self.on_connect, host, port, 5)
         loop.create_task(server)
+

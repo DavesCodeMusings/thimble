@@ -22,13 +22,13 @@ How to use it:
 
 Here are some examples of curl commands to interact with the API:
 
-curl -X GET -i 'http://192.168.4.2/temperature/celsius
-curl -X GET -i 'http://192.168.4.2/temperature/fahrenheit
-curl -X GET -i 'http://192.168.4.2/nightlight/humidity
+curl -X GET -i 'http://192.168.4.2/temperature/celsius'
+curl -X GET -i 'http://192.168.4.2/temperature/fahrenheit'
+curl -X GET -i 'http://192.168.4.2/nightlight/humidity'
 
-curl -X GET -i 'http://192.168.4.2/nightlight
-curl -X PUT -i 'http://192.168.4.2/nightlight --data on
-curl -X PUT -i 'http://192.168.4.2/nightlight --data off
-curl -X POST -i 'http://192.168.4.2/nightlight
-curl -X DELETE -i 'http://192.168.4.2/nightlight
+curl -X GET -i 'http://192.168.4.2/nightlight'
+curl -X PUT -i 'http://192.168.4.2/nightlight' --data on
+curl -X PUT -i 'http://192.168.4.2/nightlight' --data off
+curl -X POST -i 'http://192.168.4.2/nightlight'
+curl -X DELETE -i 'http://192.168.4.2/nightlight'
 

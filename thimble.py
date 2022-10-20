@@ -10,34 +10,27 @@ class Thimble:
         self.routes = {}  # Dictionary to map method and URL path combinations to functions
         self.default_content_type = default_content_type
         self.req_buffer_size = req_buffer_size
+        self.static_folder = '/static'
         self.debug = False
 
 
     server_name = 'Thimble (MicroPython)'  # Used in 'Server' response header.
 
+    http_status_text = {
+        200: "200 OK",
+        400: "400 Bad Request",
+        404: "404 Not Found",
+        500: "500 Internal Server Error"
+    }
 
-    @staticmethod
-    def http_response_status(status_code):
-        """
-        Generate an HTTP response status line based on code. Unknown codes result in a 500 Internal Server Error
-
-        Args:
-            status_code (int): Numeric HTTP status code
-
-        Returns:
-            string: The entire HTTP status line (e.g. HTTP/1.1 200 OK)
-        """
-        http_status_text = {
-            200: "200 OK",
-            400: "400 Bad Request",
-            404: "404 Not Found",
-            500: "500 Internal Server Error"
-        }
-
-        if (status_code not in http_status_text):
-            status_code = 500
-
-        return f'HTTP/1.1 {http_status_text[status_code]}'
+    content_types = {
+        'css': 'text/css',
+        'html': 'text/html',
+        'js': 'application/javascript',
+        'json': 'application/json',
+        'svg': 'image/svg+xml',
+        'txt': 'text/plain'
+    }
 
 
     @staticmethod
@@ -97,6 +90,40 @@ class Thimble:
         req['body'] = req_buffer_lines[len(req_buffer_lines) - 1]  # Last line is the body (or blank if no body.)
         
         return req
+
+
+    @staticmethod
+    def http_response_status(status_code):
+        """
+        Generate an HTTP response status line based on code. Unknown codes result in a 500 Internal Server Error
+
+        Args:
+            status_code (int): Numeric HTTP status code
+
+        Returns:
+            string: The entire HTTP status line (e.g. HTTP/1.1 200 OK)
+        """
+        if (status_code not in Thimble.http_status_text):
+            status_code = 500
+
+        return f'HTTP/1.1 {Thimble.http_status_text[status_code]}'
+
+
+    @staticmethod
+    def get_content_type_by_ext(file_ext):
+        """
+        Return a standard media type / subtype based on file extension
+        
+        Args:
+            file_ext (string): file extension without the leading dot
+
+        Returns:
+            string: media type as registered with the Internet Assigned Numbers Authority (IANA)
+        """
+        if (file_ext not in Thimble.content_types):
+            return None
+        else:
+            return Thimble.content_types[file_ext]
 
 
     @staticmethod
@@ -168,6 +195,38 @@ class Thimble:
         return add_route
 
 
+    def return_static_content(self, url_path):
+        """
+        Given a URL path, return the contents and media type of the file residing in the static_folder parent directory.
+
+        Args:
+            url_path (string): path portion of a URL (ex. '/path/to/file.ext' or simply 'file.ext')
+
+        Returns:
+            tuple: (file_contents, content_type) or None if file does not exist
+        """
+
+        file_path = self.static_folder
+        if (url_path.startswith('/') == False):
+            file_path += '/'
+
+        file_path += url_path
+        if (self.debug): print(f'Reading file from: {file_path}')
+        
+        try:
+            file = open(file_path)
+            file_contents = file.read()
+            file.close()
+        except Exception as ex:
+            if (self.debug): print(ex)
+            return None
+        else:
+            file_ext = file_path.split('.')[-1]
+            content_type = Thimble.get_content_type_by_ext(file_ext)
+
+            return file_contents, content_type
+
+
     def run(self, host='0.0.0.0', port=80, debug=False):
         """
         Synchronous connection handler used to process one connection at a time.
@@ -198,9 +257,12 @@ class Thimble:
                 res = Thimble.format_http_response('', 400, 'text/plain')
             else:
                 route_key = req['method'] + req['path']
-                if (not route_key in self.routes):  # No function in the route table?
-                    print(f'No route found for: {route_key}')
-                    res = Thimble.format_http_response('', 404, 'text/plain')
+                if (route_key not in self.routes):  # No function in the route table?
+                    static_content = self.return_static_content(req['path'])
+                    if (static_content == None):
+                        res = Thimble.format_http_response('', 404, 'text/plain')
+                    else:
+                        res = Thimble.format_http_response(static_content[0], 200, static_content[1])
                 else:
                     try:
                         func_result = self.routes[route_key](req)  # Execute function in routing table, passing request parameters.
@@ -240,8 +302,12 @@ class Thimble:
             res = Thimble.format_http_response('', 400, 'text/plain')
         else:
             route_key = req['method'] + req['path']
-            if (not route_key in self.routes):  # No function in the route table?
-                res = Thimble.format_http_response(f'No route found for: {route_key}', 404, 'text/plain')
+            if (route_key not in self.routes):  # No function in the route table?
+                static_content = self.return_static_content(req['path'])
+                if (static_content == None):
+                    res = Thimble.format_http_response('', 404, 'text/plain')
+                else:
+                    res = Thimble.format_http_response(static_content[0], 200, static_content[1])
             else:
                 if (self.debug): print(f'Async function? {Thimble.is_async(self.routes[route_key])}')
                 try:

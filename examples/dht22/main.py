@@ -38,6 +38,6 @@ def get_humidity(req):
     return round(humidity)
 
 loop = uasyncio.get_event_loop()
-api.run_async(loop=loop)
+api.run(loop=loop)
 uasyncio.create_task(read_dht())
 loop.run_forever()

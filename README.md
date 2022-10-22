@@ -80,3 +80,7 @@ Thimble is in the early phases of development and may crash from time to time. I
 
 ## Will it run on Microcontroller X?
 Code is being developed and tested using a Wemos D1 Mini (ESP8266, 4M Flash) clone with MicroPython 1.19.1. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) clone. It may or may not work with other devices.
+
+## Show me the docs!
+* [Documentation of the Thimble Class](https://davescodemusings.github.io/thimble/)
+* [Coding Examples](https://github.com/DavesCodeMusings/thimble/tree/main/examples)

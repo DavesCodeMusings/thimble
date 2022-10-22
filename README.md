@@ -45,7 +45,7 @@ def set_gpio_2(req):
         gpio_2.off()
     return gpio_2.value()
 
-app.run(debug=True)  # Listens on 0.0.0.0:80 by default.
+app.run(debug=True)
 ```
 
 Saving the code above as main.py will let you read the state of GPIO 2 using a GET method and the URL path of /gpio/2. The same path with a PUT method and `on` or `off` in the request body will change the state of GPIO 2.

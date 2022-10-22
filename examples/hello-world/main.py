@@ -5,15 +5,15 @@ from thimble import Thimble
 
 app = Thimble()
 
-@app.route('/')
+@app.route('/hello')
 def hello(req):
     return 'Hello!'
 
-@app.route('/world')
-def hello_cleveland(req):
+@app.route('/hello/world')
+def hello_world(req):
     return 'Hello World!'
 
-@app.route('/cleveland')
+@app.route('/hello/cleveland')
 def hello_cleveland(req):
     return 'Hello Cleveland!'
 

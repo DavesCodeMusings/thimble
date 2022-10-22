@@ -58,10 +58,14 @@ curl -X PUT -i 'http://192.168.0.43/gpio/2' --data 0
 curl -X PUT -i 'http://192.168.0.43/gpio/2' --data 1
 ```
 
-You can even get fancier by importing the `json` package so your API can return data like this: `{"value": 125, "units": "millivolts"}` Just change the default content-type to JSON when you instantiate the class. Like this: 
+You can even get fancier by importing the `json` package so your API can return data like this: `{"value": 125, "units": "millivolts"}` Just specify the content-type with your function's return value.
+
+Like this: 
 
 ```
-app = Thimble(default_content_type='application/json')
+@app.route('/adc/0')
+def get_adc_0(req):
+    return json.dumps({ "value": int(adc_0.read_uv() / 1000), "units": "millivolts" }), 200, 'application/json'
 ```
 
 See [the wiki](https://github.com/DavesCodeMusings/thimble/wiki) for more examples in a step by step tutorial format.
@@ -72,4 +76,4 @@ Using the example main.py assumes that networking is already configured by a boo
 Thimble is in the beginning phases of development and may crash from time to time. If it does, add a Github issue and I'll see if I can fix it.
 
 ## Will it run on Microcontroller X?
-Code is being developed and tested using a Wemos LOLIN32 (ESP32) clone with MicroPython 1.19.1. Occasionally, I will run it on a Wemos D1 Mini (ESP8266) clone. It may or may not work with other devices.
+Code is being developed and tested using a Wemos D1 Mini (ESP8266, 4M Flash) clone with MicroPython 1.19.1. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) clone. It may or may not work with other devices.

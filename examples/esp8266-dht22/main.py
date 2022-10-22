@@ -69,7 +69,7 @@ def set_nightlight_off(req):
 
 # Run the DHT reader and Thimble as asynchronous tasks.
 loop = uasyncio.get_event_loop()
-api.run_async(loop=loop)
+api.run(loop=loop)
 uasyncio.create_task(read_dht())
 loop.run_forever()
 

@@ -74,9 +74,16 @@ For example, the regex in the route below will match any integer at the end of t
 
 ```py
 @app.route('/grenade/antioch/holy/([0-9+])$', methods=['GET'])
-def get_gpio(req, num):
+def get_count(req, num):
     return f'and the number of the counting shall be {num}'
 ```
+
+Any of the following URLs will match the route
+* /grenade/antioch/holy/2
+* /grenade/antioch/holy/3
+* /grenade/antioch/holy/2048
+
+The value for `num` passed to `get_count(req, num)` will be 2, 3, and 2048 respectively. `/grenade/antioch/holy/([0-9])$` could be used to limit the match to a single digit. But, since the [MicroPython re module](https://docs.micropython.org/en/latest/library/re.html) is a subset of CPython, `/grenade/antioch/holy/([0-9]{1,2})$` to match one or two digits is right out. Counted repetitions are not supported in MicroPython.
 
 See [the wiki](https://github.com/DavesCodeMusings/thimble/wiki) for more examples in a step by step tutorial format.
 
@@ -86,7 +93,7 @@ As we say here in Wisconsin: "Oh ya, you betcha!" You can put your static files 
 ## What pitfalls do I need to be aware of?
 Using the example main.py assumes that networking is already configured by a boot.py that you supply. Thimble won't work without it. If you need help with wifi connections, see my example under [lolin32oled](https://github.com/DavesCodeMusings/esp/tree/main/lolin32oled)
 
-Thimble is in the early phases of development and may crash from time to time. If it does, add a Github issue and I'll see if I can fix it.
+Thimble is in the early phases of development and may have a few bugs lurking. If you find one, add a Github issue and I'll see if I can fix it.
 
 ## Will it run on Microcontroller X?
 Code is being developed and tested using a Wemos D1 Mini (ESP8266, 4M Flash) clone with MicroPython 1.19.1. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) clone. It may or may not work with other devices.

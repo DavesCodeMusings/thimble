@@ -12,8 +12,7 @@ class Thimble:
         self.req_buffer_size = req_buffer_size
         self.static_folder = '/static'
         self.directory_index = 'index.html'
-        self.debug = False
-
+ 
     server_name = 'Thimble (MicroPython)'  # Used in 'Server' response header.
 
     http_status_message = {
@@ -184,12 +183,13 @@ class Thimble:
             methods (list): a list of any HTTP methods (eg. ['GET', 'PUT']) that are used to trigger the call
 
         Returns:
-            nothing
+            object: wrapper function
         """
 
         def add_route(func):
             for method in methods:
-                self.routes[method.upper() + url_path] = func  # Methods are uppercase (see RFC 9110.)
+                self.routes[method.upper() + url_path] = func  # Methods are uppercase (see RFC 9110)
+
         return add_route
 
 

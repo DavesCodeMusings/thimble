@@ -198,7 +198,10 @@ class Thimble:
         Given a route pattern (METHOD + url_path), look up the corresponding function.
         
         Args:
-            route_pattern
+            route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
+
+        Returns:
+            object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
         """
         result = None
         if (route_pattern in self.routes):  # pattern is a fixed string, like: 'GET/gpio/2'
@@ -402,4 +405,5 @@ class Thimble:
             loop.create_task(server)
 
         return loop
+
 

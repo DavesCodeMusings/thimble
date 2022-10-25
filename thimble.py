@@ -368,7 +368,7 @@ class Thimble:
             else:  # nothing returned, try delivering static content instead
                 file_path = self.static_folder + req['path']
                 if (file_path.endswith('/')):
-                    file_path = f'{file_path}/{self.directory_index}'  # requests for '/path/to' become '/path/to/index.html'
+                    file_path = file_path + self.directory_index  # requests for '/path/to' become '/path/to/index.html'
                 await Thimble.send_file_contents(file_path, writer)
             
         await writer.drain()

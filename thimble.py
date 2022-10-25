@@ -1,5 +1,6 @@
 from uasyncio import get_event_loop, start_server
 from os import stat
+from re import match
 
 class Thimble:
     """
@@ -192,24 +193,52 @@ class Thimble:
         return add_route
 
 
+    def resolve_route(self, route_pattern):
+        """
+        Given a route pattern (METHOD + url_path), look up the corresponding function.
+        
+        Args:
+            route_pattern
+        """
+        result = None
+        if (route_pattern in self.routes):  # pattern is a fixed string, like: 'GET/gpio/2'
+            result = self.routes[route_pattern]
+        else:  # pattern contains regex, like 'GET/gpio/([0-9]+)'
+            for key in self.routes.keys():
+                regex_match = match(key, route_pattern)
+                if (regex_match):
+                    func = self.routes[key]
+                    wildcard_value = regex_match.group(1)
+                    result = func, wildcard_value
+
+        return result
+
+
     @staticmethod
-    async def send_function_results(func, req, writer):
+    async def send_function_results(func, req, url_wildcard, writer):
         """
         Execute the given function with the HTTP reqest parameters as an argument and send the results as an HTTP reply
         
         Args:
-            func (object): reference to the function to be executed
+            func (object): reference to the function to be executed or a tuple of function and URL wildcard
             req (dictionary): HTTP request parameters
+            url_wildcard (various types): regex-matched portion of the url_path (or None for non-regex routes)
             writer (object): the uasyncio Stream object to which the results should be sent
 
         Returns:
             nothing
         """
         try:
-            if (Thimble.is_async(func) == True):
-                func_result = await func(req)
-            else:
-                func_result = func(req)
+            if (Thimble.is_async(func) == True):  # await the async function
+                if (url_wildcard != None):
+                    func_result = await func(req, url_wildcard)
+                else:
+                    func_result = await func(req)
+            else:  # no awaiting required for non-async
+                if (url_wildcard != None):
+                    func_result = func(req, url_wildcard)
+                else:
+                    func_result = func(req)
 
         except Exception as ex:
             print(f'Function call failed: {ex}')
@@ -328,10 +357,12 @@ class Thimble:
             writer.write(await Thimble.http_headers())
             writer.write('Bad request\r\n')
         else:
-            route_key = req['method'] + req['path']
-            if (route_key in self.routes):  # if there's a function in the route table, it takes precedence
-                await Thimble.send_function_results(self.routes[route_key], req, writer)
-            else:  # otherwise, try delivering static content
+            route_value = self.resolve_route(req['method'] + req['path'])
+            if (isinstance(route_value, tuple)): # a function and URL wildcard value were returned
+                await Thimble.send_function_results(route_value[0], req, route_value[1], writer)
+            elif (route_value != None):  # just a function was returned
+                await Thimble.send_function_results(route_value, req, None, writer)
+            else:  # nothing returned, try delivering static content instead
                 file_path = self.static_folder + req['path']
                 if (file_path.endswith('/')):
                     file_path = f'{file_path}/{self.directory_index}'  # requests for '/path/to' become '/path/to/index.html'

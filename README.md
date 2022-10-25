@@ -73,7 +73,7 @@ Wildcard routes are also possible, but limited to one matching parameter written
 For example, the regex in the route below will match any integer at the end of the URL and pass it as a function argument:
 
 ```py
-@api.route('/grenade/antioch/holy/([0-9+])$', methods=['GET'])
+@app.route('/grenade/antioch/holy/([0-9+])$', methods=['GET'])
 def get_gpio(req, num):
     return f'and the number of the counting shall be {num}'
 ```

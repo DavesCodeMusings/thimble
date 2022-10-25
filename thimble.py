@@ -15,23 +15,6 @@ class Thimble:
  
     server_name = 'Thimble (MicroPython)'  # Used in 'Server' response header.
 
-    http_status_message = {
-        200: "200 OK",
-        302: "302 Found",
-        400: "400 Bad Request",
-        404: "404 Not Found",
-        500: "500 Internal Server Error"
-    }
-
-    media_types = {
-        'css': 'text/css',
-        'html': 'text/html',
-        'js': 'application/javascript',
-        'json': 'application/json',
-        'svg': 'image/svg+xml',
-        'txt': 'text/plain'
-    }
-
 
     @staticmethod
     def parse_query_string(query_string):
@@ -97,24 +80,6 @@ class Thimble:
 
 
     @staticmethod
-    async def file_type(file_path):
-        """
-        Return a standard media type / subtype based on file extension
-        
-        Args:
-            file_path (string): file name or full path
-
-        Returns:
-            string: media type as registered with the Internet Assigned Numbers Authority (IANA)
-        """
-        file_ext = file_path.split('.')[-1]
-        if (file_ext not in Thimble.media_types):
-            return 'text/plain'
-        else:
-            return Thimble.media_types[file_ext]
-
-
-    @staticmethod
     async def http_status_line(status_code):
         """
         Given an HTTP status code (e.g. 200, 404, etc.), format the server response status line
@@ -125,10 +90,18 @@ class Thimble:
         Returns:
             string: HTTP status line with protocol version, numeric status code, and corresponding status text
         """
-        if (status_code == None or status_code not in Thimble.http_status_message):
+        http_status_message = {
+            200: "200 OK",
+            302: "302 Found",
+            400: "400 Bad Request",
+            404: "404 Not Found",
+            500: "500 Internal Server Error"
+        }
+
+        if (status_code == None or status_code not in http_status_message):
             status_code = 500
             
-        return f'HTTP/1.1 {Thimble.http_status_message[status_code]}\r\n'
+        return f'HTTP/1.1 {http_status_message[status_code]}\r\n'
 
 
     @staticmethod
@@ -172,49 +145,6 @@ class Thimble:
             return False # It's a regular function
         else:
             return None  # It's not a function
-
-
-    def route(self, url_path, methods=['GET']):
-        """
-        Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
-
-        Args:
-            url_path (string): path portion of a URL (ex. '/path/to/thing') that will trigger a call to the function
-            methods (list): a list of any HTTP methods (eg. ['GET', 'PUT']) that are used to trigger the call
-
-        Returns:
-            object: wrapper function
-        """
-
-        def add_route(func):
-            for method in methods:
-                self.routes[method.upper() + url_path] = func  # Methods are uppercase (see RFC 9110)
-
-        return add_route
-
-
-    def resolve_route(self, route_pattern):
-        """
-        Given a route pattern (METHOD + url_path), look up the corresponding function.
-        
-        Args:
-            route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
-
-        Returns:
-            object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
-        """
-        result = None
-        if (route_pattern in self.routes):  # pattern is a fixed string, like: 'GET/gpio/2'
-            result = self.routes[route_pattern]
-        else:  # pattern contains regex, like 'GET/gpio/([0-9]+)'
-            for key in self.routes.keys():
-                regex_match = match(key, route_pattern)
-                if (regex_match):
-                    func = self.routes[key]
-                    wildcard_value = regex_match.group(1)
-                    result = func, wildcard_value
-
-        return result
 
 
     @staticmethod
@@ -291,6 +221,33 @@ class Thimble:
 
 
     @staticmethod
+    async def file_type(file_path):
+        """
+        Return a standard media type / subtype based on file extension
+        
+        Args:
+            file_path (string): file name or full path
+
+        Returns:
+            string: media type as registered with the Internet Assigned Numbers Authority (IANA)
+        """
+        media_types = {
+            'css': 'text/css',
+            'html': 'text/html',
+            'js': 'application/javascript',
+            'json': 'application/json',
+            'svg': 'image/svg+xml',
+            'txt': 'text/plain'
+        }
+
+        file_ext = file_path.split('.')[-1]
+        if (file_ext not in media_types):
+            return 'text/plain'
+        else:
+            return media_types[file_ext]
+
+
+    @staticmethod
     def read_file_chunk(file):
         """
         Given a file handle, read the file in small chunks to avoid large buffer requirements.
@@ -334,6 +291,49 @@ class Thimble:
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()  # drain immediately after write to avoid memory allocation errors
+
+
+    def route(self, url_path, methods=['GET']):
+        """
+        Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
+
+        Args:
+            url_path (string): path portion of a URL (ex. '/path/to/thing') that will trigger a call to the function
+            methods (list): a list of any HTTP methods (eg. ['GET', 'PUT']) that are used to trigger the call
+
+        Returns:
+            object: wrapper function
+        """
+
+        def add_route(func):
+            for method in methods:
+                self.routes[method.upper() + url_path] = func  # Methods are uppercase (see RFC 9110)
+
+        return add_route
+
+
+    def resolve_route(self, route_pattern):
+        """
+        Given a route pattern (METHOD + url_path), look up the corresponding function.
+        
+        Args:
+            route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
+
+        Returns:
+            object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
+        """
+        result = None
+        if (route_pattern in self.routes):  # pattern is a fixed string, like: 'GET/gpio/2'
+            result = self.routes[route_pattern]
+        else:  # pattern contains regex, like 'GET/gpio/([0-9]+)'
+            for key in self.routes.keys():
+                regex_match = match(key, route_pattern)
+                if (regex_match):
+                    func = self.routes[key]
+                    wildcard_value = regex_match.group(1)
+                    result = func, wildcard_value
+
+        return result
 
 
     async def on_connect(self, reader, writer):

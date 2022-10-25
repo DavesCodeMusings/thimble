@@ -9,7 +9,7 @@ Copy thimble.py to your MicroPython powered microcontroller. Use main.py to test
 
 Timble is a class with a route() method and a run() method. You add routes similar to the way you would with Flask and then call a run() method to start listening.
 
-```
+```py
 from thimble import Thimble
 
 app = Thimble() 
@@ -25,7 +25,7 @@ Now, point your web browser to the IP of your device on the default port of 80 a
 
 Beyond Hello World, here's a more useful example of exposing a GPIO pin via a REST API.
 
-```
+```py
 from machine import Pin
 from thimble import Thimble
 
@@ -62,10 +62,20 @@ You can even get fancier by importing the `json` package so your API can return 
 
 Like this: 
 
-```
+```py
 @app.route('/adc/0')
 def get_adc_0(req):
     return json.dumps({ "value": int(adc_0.read_uv() / 1000), "units": "millivolts" }), 200, 'application/json'
+```
+
+Wildcard routes are also possible, but limited to one matching parameter written as a regular expression.
+
+For example, the regex in the route below will match any integer at the end of the URL and pass it as a function argument:
+
+```py
+@api.route('/grenade/antioch/holy/([0-9+])$', methods=['GET'])
+def get_gpio(req, num):
+    return f'and the number of the counting shall be {num}'
 ```
 
 See [the wiki](https://github.com/DavesCodeMusings/thimble/wiki) for more examples in a step by step tutorial format.

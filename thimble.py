@@ -58,7 +58,10 @@ class Thimble:
         assert (req_buffer != b''), 'Empty request buffer.'
 
         req = {}
-        req_buffer_lines = req_buffer.decode('utf8').split('\r\n')
+        req_buffer_string = req_buffer.decode('utf8')
+        req_buffer_lines = req_buffer_string.split('\r\n')
+        del req_buffer_string  # free up or garbage collection
+        
         req['method'], target, req['http_version'] = req_buffer_lines[0].split(' ', 2)  # Example: GET /route/path HTTP/1.1
         if (not '?' in target):
             req['path'] = target

@@ -5,7 +5,7 @@ from machine import Pin, PWM
 from thimble import Thimble
 
 pwm_2 = PWM(Pin(2))
-pwm_2.duty(512) # Half brightness to start.
+pwm_2.duty(512) # Start with half brightness.
 
 api = Thimble()
 
@@ -35,7 +35,8 @@ def set_nightlight(req):
 
 @api.route('/nightlight', methods=['DELETE'])
 def set_nightlight_off(req):
-    pwm_2.duty(1023)  # Active low, so max duty cycle shuts it off.
+    pwm_2.duty(pwm_from_percent(0))
+    return percent_from_pwm(pwm_2.duty())
 
 
 api.run(debug=True)

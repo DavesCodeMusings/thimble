@@ -1,6 +1,6 @@
 from uasyncio import get_event_loop, start_server
 from os import stat
-from re import match
+from re import match, search
 
 class Thimble:
     """
@@ -304,6 +304,16 @@ class Thimble:
         Returns:
             object: wrapper function
         """
+        regex_macros = {
+            '<digit>': '([0-9])',
+            '<float>': '([-+]?[0-9]*\.?[0-9]+)',
+            '<int>': '([0-9]+)',
+            '<string>': '(.*)'
+        }
+        
+        regex_match = search('(<.*>)', url_path)
+        if (regex_match):
+            url_path = url_path.replace(regex_match.group(1), regex_macros[regex_match.group(1)])
 
         def add_route(func):
             for method in methods:
@@ -325,12 +335,13 @@ class Thimble:
         result = None
         if (route_pattern in self.routes):  # pattern is a fixed string, like: 'GET/gpio/2'
             result = self.routes[route_pattern]
-        else:  # pattern contains regex, like 'GET/gpio/([0-9]+)'
+        else:  # pattern may contain regex, like 'GET/gpio/([0-9]+)'
             for key in self.routes.keys():
                 regex_match = match(key, route_pattern)
                 if (regex_match):
                     func = self.routes[key]
                     wildcard_value = regex_match.group(1)
+                    if (self.debug): print(f'Wildcard match: {wildcard_value}')
                     result = func, wildcard_value
 
         return result

@@ -98,6 +98,23 @@ Thimble is in the early phases of development and may have a few bugs lurking. I
 ## Will it run on Microcontroller X?
 Code is being developed and tested using a Wemos D1 Mini (ESP8266, 4M Flash) clone with MicroPython 1.19.1. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) clone. It may or may not work with other devices.
 
+## How do I install it?
+Using mpremote on Windows, do this:
+```
+py -m mpremote connect PORT mip install github:DavesCodeMusings/thimble
+```
+
+_where PORT is something like COM4 (or whatever shows up in Device Manager for your microcontroller.)_
+
+For Linux mpremote, do this:
+```
+mpremote connect PORT mip install github:DavesCodeMusings/thimble
+```
+
+_where PORT is something like /dev/ttyUSB0 (or whatever shows up in your `dmesg` output when you plug the device in.)_
+
+Or just download directly from https://raw.githubusercontent.com/DavesCodeMusings/thimble/main/thimble.py and place it in your device's /lib directory.
+
 ## Show me the docs!
 * [Documentation of the Thimble Class](https://davescodemusings.github.io/thimble/)
 * [Coding Examples](https://github.com/DavesCodeMusings/thimble/tree/main/examples)

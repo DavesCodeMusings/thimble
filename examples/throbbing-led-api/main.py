@@ -15,26 +15,39 @@ def pulse_led():
         await uasyncio.sleep_ms(1)  # The loop delay is 1 millisecond, which is why beats per ms is important.
 
 def calculate_increment(BPM):
-    bps = BPM / 60  # Dividing BPM by 60 seconds/minute gives beats per second.
-    bpms = bps / 1000  # Dividing again by 1000 gives beats per millisecond.
-    period = 1 / bpms  # Period is the time between beats (expressed in milliseconds.) 
-    increment = pi / period  # Adding this to angle will get to 180 degrees (pi) in one beat.
+    if BPM <= 0:
+        increment = 0
+    else:
+        bps = BPM / 60  # Dividing BPM by 60 seconds/minute gives beats per second.
+        bpms = bps / 1000  # Dividing again by 1000 gives beats per millisecond.
+        period = 1 / bpms  # Period is the time between beats (expressed in milliseconds.) 
+        increment = pi / period  # Adding this to angle will get to 180 degrees (pi) in one beat.
     return increment
 
-print(BPM)
+print(f'BPM: {BPM}')
 increment = calculate_increment(BPM)
 
 api = Thimble()
 @api.route('/bpm', methods=['GET'])
 def get_bpm(req):
+    print(f'BPM: {BPM}')
     return BPM
 
 @api.route('/bpm', methods=['PUT'])
 def get_bpm(req):
     global BPM, increment
     BPM = int(req['body'])
-    print(BPM)
+    print(f'BPM: {BPM}')
     increment = calculate_increment(BPM)
+    return BPM
+
+@api.route('/bpm', methods=['DELETE'])
+def get_bpm(req):
+    global BPM, increment
+    BPM = 0
+    print(f'BPM: {BPM}')
+    increment = calculate_increment(BPM)
+    led.duty(0)
     return BPM
 
 loop = uasyncio.get_event_loop()

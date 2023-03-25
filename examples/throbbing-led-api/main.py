@@ -42,12 +42,11 @@ def get_bpm(req):
     return BPM
 
 @api.route('/bpm', methods=['DELETE'])
-def get_bpm(req):
+def del_bpm(req):
     global BPM, increment
     BPM = 0
     print(f'BPM: {BPM}')
     increment = calculate_increment(BPM)
-    led.duty(0)
     return BPM
 
 loop = uasyncio.get_event_loop()

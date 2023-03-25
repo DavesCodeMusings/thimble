@@ -11,4 +11,4 @@ wlan.active(True)
 wlan.config(authmode=AUTH_WPA2_PSK, essid=AP_NAME, password=AP_PASS)
 print(f'SSID: {AP_NAME}')
 print(f'Password: {AP_PASS}')
-print(wlan.ifconfig()[0])  # This is the device's IP address
+print(f'IP: {wlan.ifconfig()[0]}')  # This is the device's IP address

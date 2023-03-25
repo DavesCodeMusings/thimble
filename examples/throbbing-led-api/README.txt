@@ -18,5 +18,6 @@ http://192.168.4.1/bpm
 
 GET is used to retreive the current BPM.
 PUT is used to set a new BPM with the value in the request body.
+DELETE will set BPM to zero, stopping the pulsing.
 
 The body media type is always text/plain

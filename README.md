@@ -98,6 +98,8 @@ Thimble is in the early phases of development and may have a few bugs lurking. I
 ## Will it run on Microcontroller X?
 Code is being developed and tested using a Wemos D1 Mini (ESP8266, 4M Flash) clone with MicroPython 1.19.1. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) clone. It may or may not work with other devices.
 
+UPDATE: Most testing these days is on an ESP32-C3.
+
 ## How do I install it?
 Using mpremote on Windows, do this:
 ```

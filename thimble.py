@@ -108,7 +108,7 @@ class Thimble:
 
 
     @staticmethod
-    async def http_headers(content_length=0, content_type='text/plain'):
+    async def http_headers(content_length=0, content_type='text/plain', content_encoding=''):
         """
         Generate appropriate HTTP response headers based on content properties
         
@@ -120,8 +120,11 @@ class Thimble:
             string: HTTP headers separated by \r\n
         """
         headers = 'Connection: close\r\n'
-        headers += f'Content-Length: {content_length}\r\n'
+        if content_length >= 0:
+            headers += f'Content-Length: {content_length}\r\n'
         headers += f'Content-Type: {content_type}\r\n'
+        if content_encoding != '':
+            headers += f'Content-Encoding: {content_encoding}\r\n'
         headers += f'Server: {Thimble.server_name}\r\n'
         headers += '\r\n'  # blank line signifies end of headers
 
@@ -203,7 +206,7 @@ class Thimble:
 
 
     @staticmethod
-    async def file_size(file_path):
+    async def file_size(file_path, silence=False):
         """
         Given a path to a file, return the file's size or None if there's an exception when checking.
         
@@ -217,7 +220,8 @@ class Thimble:
         try:
             size = stat(file_path)[6]
         except Exception as ex:
-            print(f'Error reading properties of {file_path}: {ex}')
+            if not silence:
+                print(f'Error reading properties of {file_path}: {ex}')
             size = None
 
         return size
@@ -240,7 +244,9 @@ class Thimble:
             'js': 'application/javascript',
             'json': 'application/json',
             'svg': 'image/svg+xml',
-            'txt': 'text/plain'
+            'txt': 'text/plain',
+            'woff2': 'font/woff2',
+            'png': 'image/png'
         }
 
         file_ext = file_path.split('.')[-1]
@@ -281,15 +287,23 @@ class Thimble:
         Returns:
             nothing
         """
-        file_size = await Thimble.file_size(file_path)
-        file_type = await Thimble.file_type(file_path)
+        if (await Thimble.file_size(file_path + '.gz', True) != None): # check gzip file in silence
+            file_size = -1 # no size send
+            file_type = await Thimble.file_type(file_path)
+            file_path += '.gz'
+            content_encoding = 'gzip'
+        else:
+            file_size = await Thimble.file_size(file_path)
+            file_type = await Thimble.file_type(file_path)
+            content_encoding = ''
+
         if (file_size == None):  # None means there was an error, most likely the file doesn't exist
             writer.write(await Thimble.http_status_line(404))
             writer.write(await Thimble.http_headers())
             writer.write('File not found\r\n')
         else:
             writer.write(await Thimble.http_status_line(200))
-            writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
+            writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type, content_encoding=content_encoding))
             with open(file_path, 'rb') as file:
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)

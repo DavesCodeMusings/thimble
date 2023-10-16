@@ -1,4 +1,4 @@
-from uasyncio import get_event_loop, start_server
+from asyncio import get_event_loop, start_server
 from os import stat
 from re import match, search
 

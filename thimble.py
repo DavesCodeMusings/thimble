@@ -237,10 +237,17 @@ class Thimble:
         media_types = {
             'css': 'text/css',
             'html': 'text/html',
+            'ico': 'image/vnd.microsoft.icon',
+            'jpg': 'image/jpeg',
             'js': 'application/javascript',
             'json': 'application/json',
+            'otf': 'font/otf',
+            'png': 'image/png',
             'svg': 'image/svg+xml',
-            'txt': 'text/plain'
+            'ttf': 'font/ttf',
+            'txt': 'text/plain',
+            'woff': 'font/woff',
+            'woff2': 'font/woff2'
         }
 
         file_ext = file_path.split('.')[-1]

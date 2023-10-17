@@ -90,6 +90,8 @@ See [the wiki](https://github.com/DavesCodeMusings/thimble/wiki) for more exampl
 ## Can it serve static web pages?
 As we say here in Wisconsin: "Oh ya, you betcha!" You can put your static files in `/static` on your flash filesystem and they will be served up just like any other web server, though a bit slower.
 
+You can save space by compressing static files with GZIP and adding a `.gzip` extension. These files will be sent with a 'Content-Encoding: gzip' header that will tell the web browser to decompress upon receipt. For example, something like _script-library.js_ could be compressed and stored as _script-library.js.gzip_. Then, when a request is made for _script-library.js_, Thimble will send the contents of _script-library.js.gzip_ add the Content-Encoding header.
+
 ## What pitfalls do I need to be aware of?
 Using the example main.py assumes that networking is already configured by a boot.py that you supply. Thimble won't work without it. If you need help with wifi connections, see my example under [lolin32oled](https://github.com/DavesCodeMusings/esp/tree/main/lolin32oled)
 

@@ -183,6 +183,7 @@ class Thimble:
             writer.write(await Thimble.http_status_line(500))
             writer.write(await Thimble.http_headers(content_type='text/plain'))
             writer.write('Function call failed\r\n')
+            await writer.drain()
 
         else:
             if (isinstance(func_result, tuple) and len(func_result) == 3):
@@ -305,6 +306,7 @@ class Thimble:
             writer.write(await Thimble.http_status_line(404))
             writer.write(await Thimble.http_headers(content_type='text/plain'))
             writer.write('File not found\r\n')
+            await writer.drain()
             print(f'Error reading {file_path}')
 
     def route(self, url_path, methods=['GET']):
@@ -387,6 +389,7 @@ class Thimble:
             writer.write(await Thimble.http_status_line(400))
             writer.write(await Thimble.http_headers(content_type='text/plain'))
             writer.write('Bad request\r\n')
+            await writer.drain()
         else:
             route_value = self.resolve_route(req['method'] + req['path'])
             if (isinstance(route_value, tuple)):  # a function and URL wildcard value were returned

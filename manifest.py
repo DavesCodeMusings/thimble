@@ -1,2 +1,2 @@
-metadata(description="Thimble web framework.", version="0.3.1")
+metadata(description="Thimble web framework.", version="0.3.2")
 module("thimble.py")

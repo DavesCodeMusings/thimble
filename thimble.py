@@ -6,7 +6,7 @@ class Thimble:
     """
     A tiny web framework in the spirit of Flask, scaled down to run on microcontrollers
     """
-    def __init__(self, default_content_type='text/plain', req_buffer_size=1024):
+    def __init__(self, default_content_type='application/octet-stream', req_buffer_size=1024):
         self.routes = {}  # Dictionary to map method and URL path combinations to functions
         self.default_content_type = default_content_type
         self.req_buffer_size = req_buffer_size
@@ -107,7 +107,7 @@ class Thimble:
         return f'HTTP/1.1 {http_status_message[status_code]}\r\n'
 
     @staticmethod
-    async def http_headers(content_length=0, content_type='text/plain', content_encoding=''):
+    async def http_headers(content_length=0, content_type='', content_encoding=''):
         """
         Generate appropriate HTTP response headers based on content properties
 
@@ -123,7 +123,8 @@ class Thimble:
         if content_encoding != '':
             headers += f'Content-Encoding: {content_encoding}\r\n'
         headers += f'Content-Length: {content_length}\r\n'
-        headers += f'Content-Type: {content_type}\r\n'
+        if content_type != '':
+            headers += f'Content-Type: {content_type}\r\n'
         headers += f'Server: {Thimble.server_name}\r\n'
         headers += '\r\n'  # blank line signifies end of headers
 
@@ -180,7 +181,7 @@ class Thimble:
         except Exception as ex:
             print(f'Function call failed: {ex}')
             writer.write(await Thimble.http_status_line(500))
-            writer.write(await Thimble.http_headers())
+            writer.write(await Thimble.http_headers(content_type='text/plain'))
             writer.write('Function call failed\r\n')
 
         else:
@@ -221,8 +222,7 @@ class Thimble:
 
         return size
 
-    @staticmethod
-    async def file_type(file_path):
+    async def file_type(self, file_path):
         """
         Return a standard media type / subtype based on file extension
 
@@ -250,7 +250,7 @@ class Thimble:
 
         file_ext = file_path.split('.')[-1]
         if (file_ext not in media_types):
-            return 'text/plain'
+            return self.default_content_type
         else:
             return media_types[file_ext]
 
@@ -272,8 +272,7 @@ class Thimble:
             else:  # empty chunk means end of the file
                 return
 
-    @staticmethod
-    async def send_file_contents(file_path, writer):
+    async def send_file_contents(self, file_path, writer):
         """
         Given a file path and an output stream, send HTTP status, headers, and file contents as body
 
@@ -284,7 +283,7 @@ class Thimble:
         Returns:
             nothing
         """
-        file_type = await Thimble.file_type(file_path)
+        file_type = await self.file_type(file_path)
         file_size = await Thimble.file_size(file_path)
         file_gzip_size = await Thimble.file_size(file_path + '.gzip')
 
@@ -304,7 +303,7 @@ class Thimble:
                     await writer.drain()
         else:  # no file was found
             writer.write(await Thimble.http_status_line(404))
-            writer.write(await Thimble.http_headers())
+            writer.write(await Thimble.http_headers(content_type='text/plain'))
             writer.write('File not found\r\n')
             print(f'Error reading {file_path}')
 
@@ -386,7 +385,7 @@ class Thimble:
         except Exception as ex:
             print(f'Unable to parse request: {ex}')
             writer.write(await Thimble.http_status_line(400))
-            writer.write(await Thimble.http_headers())
+            writer.write(await Thimble.http_headers(content_type='text/plain'))
             writer.write('Bad request\r\n')
         else:
             route_value = self.resolve_route(req['method'] + req['path'])
@@ -399,7 +398,7 @@ class Thimble:
                 if (file_path.endswith('/')):
                     # requests for '/path/to' become '/path/to/index.html'
                     file_path = file_path + self.directory_index
-                await Thimble.send_file_contents(file_path, writer)
+                await self.send_file_contents(file_path, writer)
 
         await writer.drain()
         writer.close()

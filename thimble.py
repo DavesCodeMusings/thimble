@@ -237,7 +237,7 @@ class Thimble:
             'html': 'text/html',
             'ico': 'image/vnd.microsoft.icon',
             'jpg': 'image/jpeg',
-            'js': 'application/javascript',
+            'js': 'text/javascript',
             'json': 'application/json',
             'otf': 'font/otf',
             'png': 'image/png',

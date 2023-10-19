@@ -12,6 +12,11 @@ class Thimble:
         self.req_buffer_size = req_buffer_size
         self.static_folder = '/static'
         self.directory_index = 'index.html'
+        self.error_text = {
+            400: "400: Bad Request",
+            404: "404: Not Found",
+            500: "500: Internal Server Error"
+        }
 
     server_name = 'Thimble (MicroPython)'  # Used in 'Server' response header.
 
@@ -152,8 +157,24 @@ class Thimble:
         else:
             return None  # It's not a function
 
-    @staticmethod
-    async def send_function_results(func, req, url_wildcard, writer):
+    async def send_error(self, error_number, writer):
+        """
+        Given a stream and an HTTP error number, send a friendly text error message.
+
+        Args:
+            error_number (integer): HTTP status code
+            writer (object): the uasyncio Stream object to which the file should be sent
+
+        Returns:
+            nothing
+        """
+        writer.write(await Thimble.http_status_line(error_number))
+        error_text = f'{self.error_text[error_number]}\r\n'
+        writer.write(await Thimble.http_headers(content_type='text/plain', content_length=len(error_text)))
+        writer.write(error_text)
+        await writer.drain()
+
+    async def send_function_results(self, func, req, url_wildcard, writer):
         """
         Execute the given function with the HTTP reqest parameters as an argument and send the results as an HTTP reply
 
@@ -179,12 +200,8 @@ class Thimble:
                     func_result = func(req)
 
         except Exception as ex:
+            await self.send_error(500, writer)
             print(f'Function call failed: {ex}')
-            writer.write(await Thimble.http_status_line(500))
-            writer.write(await Thimble.http_headers(content_type='text/plain'))
-            writer.write('Function call failed\r\n')
-            await writer.drain()
-
         else:
             if (isinstance(func_result, tuple) and len(func_result) == 3):
                 body, status_code, content_type = func_result
@@ -303,11 +320,8 @@ class Thimble:
                     writer.write(chunk)
                     await writer.drain()
         else:  # no file was found
-            writer.write(await Thimble.http_status_line(404))
-            writer.write(await Thimble.http_headers(content_type='text/plain'))
-            writer.write('File not found\r\n')
-            await writer.drain()
-            print(f'Error reading {file_path}')
+            await self.send_error(404, writer)
+            print(f'Error reading file: {file_path}')
 
     def route(self, url_path, methods=['GET']):
         """
@@ -385,17 +399,14 @@ class Thimble:
             if (self.debug):
                 print(f'Request: {req}')
         except Exception as ex:
+            await self.send_error(400, writer)
             print(f'Unable to parse request: {ex}')
-            writer.write(await Thimble.http_status_line(400))
-            writer.write(await Thimble.http_headers(content_type='text/plain'))
-            writer.write('Bad request\r\n')
-            await writer.drain()
         else:
             route_value = self.resolve_route(req['method'] + req['path'])
             if (isinstance(route_value, tuple)):  # a function and URL wildcard value were returned
-                await Thimble.send_function_results(route_value[0], req, route_value[1], writer)
+                await self.send_function_results(route_value[0], req, route_value[1], writer)
             elif (route_value != None):  # just a function was returned
-                await Thimble.send_function_results(route_value, req, None, writer)
+                await self.send_function_results(route_value, req, None, writer)
             else:  # nothing returned, try delivering static content instead
                 file_path = self.static_folder + req['path']
                 if (file_path.endswith('/')):

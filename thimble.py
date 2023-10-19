@@ -17,6 +17,21 @@ class Thimble:
             404: "404: Not Found",
             500: "500: Internal Server Error"
         }
+        self.media_types = {
+            'css': 'text/css',
+            'html': 'text/html',
+            'ico': 'image/vnd.microsoft.icon',
+            'jpg': 'image/jpeg',
+            'js': 'text/javascript',
+            'json': 'application/json',
+            'otf': 'font/otf',
+            'png': 'image/png',
+            'svg': 'image/svg+xml',
+            'ttf': 'font/ttf',
+            'txt': 'text/plain',
+            'woff': 'font/woff',
+            'woff2': 'font/woff2'
+        }
 
     server_name = 'Thimble (MicroPython)'  # Used in 'Server' response header.
 
@@ -250,27 +265,11 @@ class Thimble:
         Returns:
             string: media type as registered with the Internet Assigned Numbers Authority (IANA)
         """
-        media_types = {
-            'css': 'text/css',
-            'html': 'text/html',
-            'ico': 'image/vnd.microsoft.icon',
-            'jpg': 'image/jpeg',
-            'js': 'text/javascript',
-            'json': 'application/json',
-            'otf': 'font/otf',
-            'png': 'image/png',
-            'svg': 'image/svg+xml',
-            'ttf': 'font/ttf',
-            'txt': 'text/plain',
-            'woff': 'font/woff',
-            'woff2': 'font/woff2'
-        }
-
         file_ext = file_path.split('.')[-1]
-        if (file_ext not in media_types):
+        if (file_ext not in self.media_types):
             return self.default_content_type
         else:
-            return media_types[file_ext]
+            return self.media_types[file_ext]
 
     @staticmethod
     def read_file_chunk(file):

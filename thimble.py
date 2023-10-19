@@ -178,7 +178,7 @@ class Thimble:
 
         Args:
             error_number (integer): HTTP status code
-            writer (object): the uasyncio Stream object to which the file should be sent
+            writer (object): the asyncio Stream object to which the file should be sent
 
         Returns:
             nothing
@@ -197,7 +197,7 @@ class Thimble:
             func (object): reference to the function to be executed or a tuple of function and URL wildcard
             req (dictionary): HTTP request parameters
             url_wildcard (various types): regex-matched portion of the url_path (or None for non-regex routes)
-            writer (object): the uasyncio Stream object to which the results should be sent
+            writer (object): the asyncio Stream object to which the results should be sent
 
         Returns:
             nothing
@@ -295,7 +295,7 @@ class Thimble:
 
         Args:
             file_path (string): fully-qualified path to file
-            writer (object): the uasyncio Stream object to which the file should be sent
+            writer (object): the asyncio Stream object to which the file should be sent
 
         Returns:
             nothing
@@ -428,7 +428,7 @@ class Thimble:
         Args:
             host (string): the IP address of the interface on which to listen
             port (int): the TCP port on which to listen
-            loop (object): a uasyncio loop that the server should insert itself into
+            loop (object): the asyncio loop that the server should insert itself into
             debug (boolean): a flag to indicate verbose logging is desired
 
         Returns:

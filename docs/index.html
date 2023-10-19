@@ -1,225 +1,1724 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Python: module thimble</title>
-</head><body>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>thimble API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>thimble</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from asyncio import get_event_loop, start_server
+from os import stat
+from re import match, search
 
-<table class="heading">
-<tr class="heading-text decor">
-<td class="title">&nbsp;<br><strong class="title">thimble</strong></td>
-<td class="extra"><a href=".">index</a><br><a href="file:/home/dave/py/thimble/thimble.py">/home/dave/py/thimble/thimble.py</a></td></tr></table>
-    <p></p>
-<p>
-<table class="section">
-<tr class="decor index-decor heading-text">
-<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
+class Thimble:
+    &#34;&#34;&#34;
+    A tiny web framework in the spirit of Flask, scaled down to run on microcontrollers
+    &#34;&#34;&#34;
+    def __init__(self, default_content_type=&#39;application/octet-stream&#39;, req_buffer_size=1024):
+        self.routes = {}  # Dictionary to map method and URL path combinations to functions
+        self.default_content_type = default_content_type
+        self.req_buffer_size = req_buffer_size
+        self.static_folder = &#39;/static&#39;
+        self.directory_index = &#39;index.html&#39;
+        self.error_text = {
+            400: &#34;400: Bad Request&#34;,
+            404: &#34;404: Not Found&#34;,
+            500: &#34;500: Internal Server Error&#34;
+        }
+        self.media_types = {
+            &#39;css&#39;: &#39;text/css&#39;,
+            &#39;html&#39;: &#39;text/html&#39;,
+            &#39;ico&#39;: &#39;image/vnd.microsoft.icon&#39;,
+            &#39;jpg&#39;: &#39;image/jpeg&#39;,
+            &#39;js&#39;: &#39;text/javascript&#39;,
+            &#39;json&#39;: &#39;application/json&#39;,
+            &#39;otf&#39;: &#39;font/otf&#39;,
+            &#39;png&#39;: &#39;image/png&#39;,
+            &#39;svg&#39;: &#39;image/svg+xml&#39;,
+            &#39;ttf&#39;: &#39;font/ttf&#39;,
+            &#39;txt&#39;: &#39;text/plain&#39;,
+            &#39;woff&#39;: &#39;font/woff&#39;,
+            &#39;woff2&#39;: &#39;font/woff2&#39;
+        }
 
-<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
-<td class="singlecolumn"><dl>
-<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
-</dt><dd>
+    server_name = &#39;Thimble (MicroPython)&#39;  # Used in &#39;Server&#39; response header.
+
+    @staticmethod
+    def parse_query_string(query_string):
+        &#34;&#34;&#34;
+        Split a URL&#39;s query string into individual key/value pairs
+        (ex: &#39;pet=Panda&amp;color=Red&#39; becomes { &#34;pet&#34;: &#34;panda&#34;, &#34;color&#34;: &#34;red&#34;}
+        Args:
+            query_string (string): the query string portion of a URL (without the leading ? delimiter)
+
+        Returns:
+            dictionary: key/value pairs
+        &#34;&#34;&#34;
+        query = {}
+        query_params = query_string.split(&#39;&amp;&#39;)
+        for param in query_params:
+            if (not &#39;=&#39; in param):  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
+                key = param
+                query[key] = &#39;&#39;
+            else:
+                key, value = param.split(&#39;=&#39;)
+                query[key] = value
+
+        return query
+
+    @staticmethod
+    async def parse_http_request(req_buffer):
+        &#34;&#34;&#34;
+        Given a raw HTTP request, return a dictionary with individual elements broken out
+
+        Args:
+            req_buffer (bytes): the unprocessed HTTP request sent from the client
+
+        Raises:
+            exception: when the request buffer is empty
+
+        Returns:
+            dictionary: key/value pairs including, but not limited to method, path, query, headers, body, etc.
+                or None type if parsing fails
+        &#34;&#34;&#34;
+        assert (req_buffer != b&#39;&#39;), &#39;Empty request buffer.&#39;
+
+        req = {}
+        req_buffer_string = req_buffer.decode(&#39;utf8&#39;)
+        req_buffer_lines = req_buffer_string.split(&#39;\r\n&#39;)
+        del req_buffer_string  # free up or garbage collection
+
+        req[&#39;method&#39;], target, req[&#39;http_version&#39;] = req_buffer_lines[0].split(
+            &#39; &#39;, 2)  # Example: GET /route/path HTTP/1.1
+        if (not &#39;?&#39; in target):
+            req[&#39;path&#39;] = target
+        else:  # target can have a query component, so /route/path could be something like /route/path?state=on&amp;timeout=30
+            req[&#39;path&#39;], query_string = target.split(&#39;?&#39;, 1)
+            req[&#39;query&#39;] = Thimble.parse_query_string(query_string)
+
+        req[&#39;headers&#39;] = {}
+        for i in range(1, len(req_buffer_lines) - 1):
+            # Blank line signifies the end of headers.
+            if (req_buffer_lines[i] == &#39;&#39;):
+                break
+            else:
+                name, value = req_buffer_lines[i].split(&#39;:&#39;, 1)
+                req[&#39;headers&#39;][name.strip()] = value.strip()
+
+        # Last line is the body (or blank if no body.)
+        req[&#39;body&#39;] = req_buffer_lines[len(req_buffer_lines) - 1]
+
+        return req
+
+    @staticmethod
+    async def http_status_line(status_code):
+        &#34;&#34;&#34;
+        Given an HTTP status code (e.g. 200, 404, etc.), format the server response status line
+
+        Args:
+            status_code (int): the HTTP status code as defined by RFC 7231 Respone Status Codes (ex. 200)
+
+        Returns:
+            string: HTTP status line with protocol version, numeric status code, and corresponding status text
+        &#34;&#34;&#34;
+        http_status_message = {
+            200: &#34;200 OK&#34;,
+            302: &#34;302 Found&#34;,
+            400: &#34;400 Bad Request&#34;,
+            404: &#34;404 Not Found&#34;,
+            500: &#34;500 Internal Server Error&#34;
+        }
+
+        if (status_code == None or status_code not in http_status_message):
+            status_code = 500
+
+        return f&#39;HTTP/1.1 {http_status_message[status_code]}\r\n&#39;
+
+    @staticmethod
+    async def http_headers(content_length=0, content_type=&#39;&#39;, content_encoding=&#39;&#39;):
+        &#34;&#34;&#34;
+        Generate appropriate HTTP response headers based on content properties
+
+        Args:
+            content_length (int): length of body, used for Content-Length header
+            content_type (string): media-type of body, used for Content-Type header
+            content_encoding(string): compression type, used for Content-Encoding header
+
+        Returns:
+            string: HTTP headers separated by \r\n
+        &#34;&#34;&#34;
+        headers = &#39;Connection: close\r\n&#39;
+        if content_encoding != &#39;&#39;:
+            headers += f&#39;Content-Encoding: {content_encoding}\r\n&#39;
+        headers += f&#39;Content-Length: {content_length}\r\n&#39;
+        if content_type != &#39;&#39;:
+            headers += f&#39;Content-Type: {content_type}\r\n&#39;
+        headers += f&#39;Server: {Thimble.server_name}\r\n&#39;
+        headers += &#39;\r\n&#39;  # blank line signifies end of headers
+
+        return headers
+
+    # MicroPython does not have a built-in types module, so to avoid external dependencies this method lets
+    # Thimble determine if route functions should be awaited or not by comparing their type to known async
+    # and regular functions that are already part of the code.
+
+    @staticmethod
+    def is_async(func):
+        &#34;&#34;&#34;
+        Determine if a function is async not by comparing its type to known async and regular functions.
+
+        Args:
+            func (object): a reference to the function being examined
+
+        Returns:
+            boolean: True if the function was defined as asynchronous, False if not, and None if unknown
+        &#34;&#34;&#34;
+        if (type(func) == type(Thimble.on_connect)):
+            return True  # It&#39;s an async function
+        elif (type(func) == type(Thimble.run)):
+            return False  # It&#39;s a regular function
+        else:
+            return None  # It&#39;s not a function
+
+    async def send_error(self, error_number, writer):
+        &#34;&#34;&#34;
+        Given a stream and an HTTP error number, send a friendly text error message.
+
+        Args:
+            error_number (integer): HTTP status code
+            writer (object): the asyncio Stream object to which the file should be sent
+
+        Returns:
+            nothing
+        &#34;&#34;&#34;
+        writer.write(await Thimble.http_status_line(error_number))
+        error_text = f&#39;{self.error_text[error_number]}\r\n&#39;
+        writer.write(await Thimble.http_headers(content_type=&#39;text/plain&#39;, content_length=len(error_text)))
+        writer.write(error_text)
+        await writer.drain()
+
+    async def send_function_results(self, func, req, url_wildcard, writer):
+        &#34;&#34;&#34;
+        Execute the given function with the HTTP reqest parameters as an argument and send the results as an HTTP reply
+
+        Args:
+            func (object): reference to the function to be executed or a tuple of function and URL wildcard
+            req (dictionary): HTTP request parameters
+            url_wildcard (various types): regex-matched portion of the url_path (or None for non-regex routes)
+            writer (object): the asyncio Stream object to which the results should be sent
+
+        Returns:
+            nothing
+        &#34;&#34;&#34;
+        try:
+            if (Thimble.is_async(func) == True):  # await the async function
+                if (url_wildcard != None):
+                    func_result = await func(req, url_wildcard)
+                else:
+                    func_result = await func(req)
+            else:  # no awaiting required for non-async
+                if (url_wildcard != None):
+                    func_result = func(req, url_wildcard)
+                else:
+                    func_result = func(req)
+
+        except Exception as ex:
+            await self.send_error(500, writer)
+            print(f&#39;Function call failed: {ex}&#39;)
+        else:
+            if (isinstance(func_result, tuple) and len(func_result) == 3):
+                body, status_code, content_type = func_result
+            elif (isinstance(func_result, tuple) and len(func_result) == 2):
+                body, status_code = func_result
+                content_type = &#39;text/plain&#39;
+            else:
+                body = func_result
+                status_code = 200
+                content_type = &#39;text/plain&#39;
+
+            if (not isinstance(body, str)):
+                body = str(body)
+            writer.write(await Thimble.http_status_line(status_code))
+            writer.write(await Thimble.http_headers(content_length=len(body), content_type=content_type))
+            await writer.drain()
+            writer.write(body)
+            await writer.drain()
+
+    @staticmethod
+    async def file_size(file_path):
+        &#34;&#34;&#34;
+        Given a path to a file, return the file&#39;s size or None if there&#39;s an exception when checking.
+
+        Args:
+            file_path (string): a fully-qualified path to the location of the file
+
+        Returns:
+            file size in bytes or None if there was a problem obtaining the size (e.g. file does not exist)
+        &#34;&#34;&#34;
+
+        try:
+            size = stat(file_path)[6]
+        except Exception as ex:
+            size = None
+
+        return size
+
+    async def file_type(self, file_path):
+        &#34;&#34;&#34;
+        Return a standard media type / subtype based on file extension
+
+        Args:
+            file_path (string): file name or full path
+
+        Returns:
+            string: media type as registered with the Internet Assigned Numbers Authority (IANA)
+        &#34;&#34;&#34;
+        file_ext = file_path.split(&#39;.&#39;)[-1]
+        if (file_ext not in self.media_types):
+            return self.default_content_type
+        else:
+            return self.media_types[file_ext]
+
+    @staticmethod
+    def read_file_chunk(file):
+        &#34;&#34;&#34;
+        Given a file handle, read the file in small chunks to avoid large buffer requirements.
+
+        Args:
+            file (object): the file handle returned by open()
+
+        Returns:
+            bytes: a chunk of the file until the file ends, then nothing
+        &#34;&#34;&#34;
+        while True:
+            chunk = file.read(64)  # small chunks to avoid out of memory errors
+            if chunk:
+                yield chunk
+            else:  # empty chunk means end of the file
+                return
+
+    async def send_file_contents(self, file_path, writer):
+        &#34;&#34;&#34;
+        Given a file path and an output stream, send HTTP status, headers, and file contents as body
+
+        Args:
+            file_path (string): fully-qualified path to file
+            writer (object): the asyncio Stream object to which the file should be sent
+
+        Returns:
+            nothing
+        &#34;&#34;&#34;
+        file_type = await self.file_type(file_path)
+        file_size = await Thimble.file_size(file_path)
+        file_gzip_size = await Thimble.file_size(file_path + &#39;.gzip&#39;)
+
+        if file_size != None:  # a non-compressed file was found
+            writer.write(await Thimble.http_status_line(200))
+            writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
+            with open(file_path, &#39;rb&#39;) as file:
+                for chunk in Thimble.read_file_chunk(file):
+                    writer.write(chunk)
+                    await writer.drain()  # drain immediately after write to avoid memory allocation errors
+        elif file_gzip_size != None:  # a compressed file was found
+            writer.write(await Thimble.http_status_line(200))
+            writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding=&#39;gzip&#39;))
+            with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:
+                for chunk in Thimble.read_file_chunk(file):
+                    writer.write(chunk)
+                    await writer.drain()
+        else:  # no file was found
+            await self.send_error(404, writer)
+            print(f&#39;Error reading file: {file_path}&#39;)
+
+    def route(self, url_path, methods=[&#39;GET&#39;]):
+        &#34;&#34;&#34;
+        Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
+
+        Args:
+            url_path (string): path portion of a URL (ex. &#39;/path/to/thing&#39;) that will trigger a call to the function
+            methods (list): a list of any HTTP methods (eg. [&#39;GET&#39;, &#39;PUT&#39;]) that are used to trigger the call
+
+        Returns:
+            object: wrapper function
+        &#34;&#34;&#34;
+        regex_macros = {
+            &#39;&lt;digit&gt;&#39;: &#39;([0-9])&#39;,
+            &#39;&lt;float&gt;&#39;: &#39;([-+]?[0-9]*\.?[0-9]+)&#39;,
+            &#39;&lt;int&gt;&#39;: &#39;([0-9]+)&#39;,
+            &#39;&lt;string&gt;&#39;: &#39;(.*)&#39;
+        }
+
+        regex_match = search(&#39;(&lt;.*&gt;)&#39;, url_path)
+        if (regex_match):
+            url_path = url_path.replace(regex_match.group(
+                1), regex_macros[regex_match.group(1)])
+
+        def add_route(func):
+            for method in methods:
+                # Methods are uppercase (see RFC 9110)
+                self.routes[method.upper() + url_path] = func
+
+        return add_route
+
+    def resolve_route(self, route_pattern):
+        &#34;&#34;&#34;
+        Given a route pattern (METHOD + url_path), look up the corresponding function.
+
+        Args:
+            route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
+
+        Returns:
+            object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
+        &#34;&#34;&#34;
+        result = None
+        if (route_pattern in self.routes):  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
+            result = self.routes[route_pattern]
+        else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
+            for key in self.routes.keys():
+                regex_match = match(key, route_pattern)
+                if (regex_match):
+                    func = self.routes[key]
+                    wildcard_value = regex_match.group(1)
+                    if (self.debug):
+                        print(f&#39;Wildcard match: {wildcard_value}&#39;)
+                    result = func, wildcard_value
+
+        return result
+
+    async def on_connect(self, reader, writer):
+        &#34;&#34;&#34;
+        Connection handler for new client requests.
+
+        Args:
+            reader (stream): input received from the client
+            writer (stream): output to be sent to the client
+
+        Returns:
+            nothing
+        &#34;&#34;&#34;
+        client_ip = writer.get_extra_info(&#39;peername&#39;)[0]
+        if (self.debug):
+            print(f&#39;Connection from client: {client_ip}&#39;)
+
+        try:
+            req_buffer = await reader.read(self.req_buffer_size)
+            req = await Thimble.parse_http_request(req_buffer)
+            if (self.debug):
+                print(f&#39;Request: {req}&#39;)
+        except Exception as ex:
+            await self.send_error(400, writer)
+            print(f&#39;Unable to parse request: {ex}&#39;)
+        else:
+            route_value = self.resolve_route(req[&#39;method&#39;] + req[&#39;path&#39;])
+            if (isinstance(route_value, tuple)):  # a function and URL wildcard value were returned
+                await self.send_function_results(route_value[0], req, route_value[1], writer)
+            elif (route_value != None):  # just a function was returned
+                await self.send_function_results(route_value, req, None, writer)
+            else:  # nothing returned, try delivering static content instead
+                file_path = self.static_folder + req[&#39;path&#39;]
+                if (file_path.endswith(&#39;/&#39;)):
+                    # requests for &#39;/path/to&#39; become &#39;/path/to/index.html&#39;
+                    file_path = file_path + self.directory_index
+                await self.send_file_contents(file_path, writer)
+
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+        reader.close()
+        await reader.wait_closed()
+        if (self.debug):
+            print(f&#39;Connection closed for {client_ip}&#39;)
+
+    def run(self, host=&#39;0.0.0.0&#39;, port=80, loop=None, debug=False):
+        &#34;&#34;&#34;
+        Start an asynchronous listener for HTTP requests.
+
+        Args:
+            host (string): the IP address of the interface on which to listen
+            port (int): the TCP port on which to listen
+            loop (object): the asyncio loop that the server should insert itself into
+            debug (boolean): a flag to indicate verbose logging is desired
+
+        Returns:
+            object: the same loop object given as a parameter or a new one if no existing loop was passed
+        &#34;&#34;&#34;
+        self.debug = debug
+        print(f&#39;Listening on {host}:{port}&#39;)
+
+        if (loop == None):
+            loop = get_event_loop()
+            server = start_server(self.on_connect, host, port, 5)
+            loop.create_task(server)
+            loop.run_forever()
+        else:
+            server = start_server(self.on_connect, host, port, 5)
+            loop.create_task(server)
+
+        return loop</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt class="heading-text"><a href="thimble.html#Thimble">Thimble</a>
-</dt></dl>
+<dt id="thimble.Thimble"><code class="flex name class">
+<span>class <span class="ident">Thimble</span></span>
+<span>(</span><span>default_content_type='application/octet-stream', req_buffer_size=1024)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A tiny web framework in the spirit of Flask, scaled down to run on microcontrollers</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Thimble:
+    &#34;&#34;&#34;
+    A tiny web framework in the spirit of Flask, scaled down to run on microcontrollers
+    &#34;&#34;&#34;
+    def __init__(self, default_content_type=&#39;application/octet-stream&#39;, req_buffer_size=1024):
+        self.routes = {}  # Dictionary to map method and URL path combinations to functions
+        self.default_content_type = default_content_type
+        self.req_buffer_size = req_buffer_size
+        self.static_folder = &#39;/static&#39;
+        self.directory_index = &#39;index.html&#39;
+        self.error_text = {
+            400: &#34;400: Bad Request&#34;,
+            404: &#34;404: Not Found&#34;,
+            500: &#34;500: Internal Server Error&#34;
+        }
+        self.media_types = {
+            &#39;css&#39;: &#39;text/css&#39;,
+            &#39;html&#39;: &#39;text/html&#39;,
+            &#39;ico&#39;: &#39;image/vnd.microsoft.icon&#39;,
+            &#39;jpg&#39;: &#39;image/jpeg&#39;,
+            &#39;js&#39;: &#39;text/javascript&#39;,
+            &#39;json&#39;: &#39;application/json&#39;,
+            &#39;otf&#39;: &#39;font/otf&#39;,
+            &#39;png&#39;: &#39;image/png&#39;,
+            &#39;svg&#39;: &#39;image/svg+xml&#39;,
+            &#39;ttf&#39;: &#39;font/ttf&#39;,
+            &#39;txt&#39;: &#39;text/plain&#39;,
+            &#39;woff&#39;: &#39;font/woff&#39;,
+            &#39;woff2&#39;: &#39;font/woff2&#39;
+        }
+
+    server_name = &#39;Thimble (MicroPython)&#39;  # Used in &#39;Server&#39; response header.
+
+    @staticmethod
+    def parse_query_string(query_string):
+        &#34;&#34;&#34;
+        Split a URL&#39;s query string into individual key/value pairs
+        (ex: &#39;pet=Panda&amp;color=Red&#39; becomes { &#34;pet&#34;: &#34;panda&#34;, &#34;color&#34;: &#34;red&#34;}
+        Args:
+            query_string (string): the query string portion of a URL (without the leading ? delimiter)
+
+        Returns:
+            dictionary: key/value pairs
+        &#34;&#34;&#34;
+        query = {}
+        query_params = query_string.split(&#39;&amp;&#39;)
+        for param in query_params:
+            if (not &#39;=&#39; in param):  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
+                key = param
+                query[key] = &#39;&#39;
+            else:
+                key, value = param.split(&#39;=&#39;)
+                query[key] = value
+
+        return query
+
+    @staticmethod
+    async def parse_http_request(req_buffer):
+        &#34;&#34;&#34;
+        Given a raw HTTP request, return a dictionary with individual elements broken out
+
+        Args:
+            req_buffer (bytes): the unprocessed HTTP request sent from the client
+
+        Raises:
+            exception: when the request buffer is empty
+
+        Returns:
+            dictionary: key/value pairs including, but not limited to method, path, query, headers, body, etc.
+                or None type if parsing fails
+        &#34;&#34;&#34;
+        assert (req_buffer != b&#39;&#39;), &#39;Empty request buffer.&#39;
+
+        req = {}
+        req_buffer_string = req_buffer.decode(&#39;utf8&#39;)
+        req_buffer_lines = req_buffer_string.split(&#39;\r\n&#39;)
+        del req_buffer_string  # free up or garbage collection
+
+        req[&#39;method&#39;], target, req[&#39;http_version&#39;] = req_buffer_lines[0].split(
+            &#39; &#39;, 2)  # Example: GET /route/path HTTP/1.1
+        if (not &#39;?&#39; in target):
+            req[&#39;path&#39;] = target
+        else:  # target can have a query component, so /route/path could be something like /route/path?state=on&amp;timeout=30
+            req[&#39;path&#39;], query_string = target.split(&#39;?&#39;, 1)
+            req[&#39;query&#39;] = Thimble.parse_query_string(query_string)
+
+        req[&#39;headers&#39;] = {}
+        for i in range(1, len(req_buffer_lines) - 1):
+            # Blank line signifies the end of headers.
+            if (req_buffer_lines[i] == &#39;&#39;):
+                break
+            else:
+                name, value = req_buffer_lines[i].split(&#39;:&#39;, 1)
+                req[&#39;headers&#39;][name.strip()] = value.strip()
+
+        # Last line is the body (or blank if no body.)
+        req[&#39;body&#39;] = req_buffer_lines[len(req_buffer_lines) - 1]
+
+        return req
+
+    @staticmethod
+    async def http_status_line(status_code):
+        &#34;&#34;&#34;
+        Given an HTTP status code (e.g. 200, 404, etc.), format the server response status line
+
+        Args:
+            status_code (int): the HTTP status code as defined by RFC 7231 Respone Status Codes (ex. 200)
+
+        Returns:
+            string: HTTP status line with protocol version, numeric status code, and corresponding status text
+        &#34;&#34;&#34;
+        http_status_message = {
+            200: &#34;200 OK&#34;,
+            302: &#34;302 Found&#34;,
+            400: &#34;400 Bad Request&#34;,
+            404: &#34;404 Not Found&#34;,
+            500: &#34;500 Internal Server Error&#34;
+        }
+
+        if (status_code == None or status_code not in http_status_message):
+            status_code = 500
+
+        return f&#39;HTTP/1.1 {http_status_message[status_code]}\r\n&#39;
+
+    @staticmethod
+    async def http_headers(content_length=0, content_type=&#39;&#39;, content_encoding=&#39;&#39;):
+        &#34;&#34;&#34;
+        Generate appropriate HTTP response headers based on content properties
+
+        Args:
+            content_length (int): length of body, used for Content-Length header
+            content_type (string): media-type of body, used for Content-Type header
+            content_encoding(string): compression type, used for Content-Encoding header
+
+        Returns:
+            string: HTTP headers separated by \r\n
+        &#34;&#34;&#34;
+        headers = &#39;Connection: close\r\n&#39;
+        if content_encoding != &#39;&#39;:
+            headers += f&#39;Content-Encoding: {content_encoding}\r\n&#39;
+        headers += f&#39;Content-Length: {content_length}\r\n&#39;
+        if content_type != &#39;&#39;:
+            headers += f&#39;Content-Type: {content_type}\r\n&#39;
+        headers += f&#39;Server: {Thimble.server_name}\r\n&#39;
+        headers += &#39;\r\n&#39;  # blank line signifies end of headers
+
+        return headers
+
+    # MicroPython does not have a built-in types module, so to avoid external dependencies this method lets
+    # Thimble determine if route functions should be awaited or not by comparing their type to known async
+    # and regular functions that are already part of the code.
+
+    @staticmethod
+    def is_async(func):
+        &#34;&#34;&#34;
+        Determine if a function is async not by comparing its type to known async and regular functions.
+
+        Args:
+            func (object): a reference to the function being examined
+
+        Returns:
+            boolean: True if the function was defined as asynchronous, False if not, and None if unknown
+        &#34;&#34;&#34;
+        if (type(func) == type(Thimble.on_connect)):
+            return True  # It&#39;s an async function
+        elif (type(func) == type(Thimble.run)):
+            return False  # It&#39;s a regular function
+        else:
+            return None  # It&#39;s not a function
+
+    async def send_error(self, error_number, writer):
+        &#34;&#34;&#34;
+        Given a stream and an HTTP error number, send a friendly text error message.
+
+        Args:
+            error_number (integer): HTTP status code
+            writer (object): the asyncio Stream object to which the file should be sent
+
+        Returns:
+            nothing
+        &#34;&#34;&#34;
+        writer.write(await Thimble.http_status_line(error_number))
+        error_text = f&#39;{self.error_text[error_number]}\r\n&#39;
+        writer.write(await Thimble.http_headers(content_type=&#39;text/plain&#39;, content_length=len(error_text)))
+        writer.write(error_text)
+        await writer.drain()
+
+    async def send_function_results(self, func, req, url_wildcard, writer):
+        &#34;&#34;&#34;
+        Execute the given function with the HTTP reqest parameters as an argument and send the results as an HTTP reply
+
+        Args:
+            func (object): reference to the function to be executed or a tuple of function and URL wildcard
+            req (dictionary): HTTP request parameters
+            url_wildcard (various types): regex-matched portion of the url_path (or None for non-regex routes)
+            writer (object): the asyncio Stream object to which the results should be sent
+
+        Returns:
+            nothing
+        &#34;&#34;&#34;
+        try:
+            if (Thimble.is_async(func) == True):  # await the async function
+                if (url_wildcard != None):
+                    func_result = await func(req, url_wildcard)
+                else:
+                    func_result = await func(req)
+            else:  # no awaiting required for non-async
+                if (url_wildcard != None):
+                    func_result = func(req, url_wildcard)
+                else:
+                    func_result = func(req)
+
+        except Exception as ex:
+            await self.send_error(500, writer)
+            print(f&#39;Function call failed: {ex}&#39;)
+        else:
+            if (isinstance(func_result, tuple) and len(func_result) == 3):
+                body, status_code, content_type = func_result
+            elif (isinstance(func_result, tuple) and len(func_result) == 2):
+                body, status_code = func_result
+                content_type = &#39;text/plain&#39;
+            else:
+                body = func_result
+                status_code = 200
+                content_type = &#39;text/plain&#39;
+
+            if (not isinstance(body, str)):
+                body = str(body)
+            writer.write(await Thimble.http_status_line(status_code))
+            writer.write(await Thimble.http_headers(content_length=len(body), content_type=content_type))
+            await writer.drain()
+            writer.write(body)
+            await writer.drain()
+
+    @staticmethod
+    async def file_size(file_path):
+        &#34;&#34;&#34;
+        Given a path to a file, return the file&#39;s size or None if there&#39;s an exception when checking.
+
+        Args:
+            file_path (string): a fully-qualified path to the location of the file
+
+        Returns:
+            file size in bytes or None if there was a problem obtaining the size (e.g. file does not exist)
+        &#34;&#34;&#34;
+
+        try:
+            size = stat(file_path)[6]
+        except Exception as ex:
+            size = None
+
+        return size
+
+    async def file_type(self, file_path):
+        &#34;&#34;&#34;
+        Return a standard media type / subtype based on file extension
+
+        Args:
+            file_path (string): file name or full path
+
+        Returns:
+            string: media type as registered with the Internet Assigned Numbers Authority (IANA)
+        &#34;&#34;&#34;
+        file_ext = file_path.split(&#39;.&#39;)[-1]
+        if (file_ext not in self.media_types):
+            return self.default_content_type
+        else:
+            return self.media_types[file_ext]
+
+    @staticmethod
+    def read_file_chunk(file):
+        &#34;&#34;&#34;
+        Given a file handle, read the file in small chunks to avoid large buffer requirements.
+
+        Args:
+            file (object): the file handle returned by open()
+
+        Returns:
+            bytes: a chunk of the file until the file ends, then nothing
+        &#34;&#34;&#34;
+        while True:
+            chunk = file.read(64)  # small chunks to avoid out of memory errors
+            if chunk:
+                yield chunk
+            else:  # empty chunk means end of the file
+                return
+
+    async def send_file_contents(self, file_path, writer):
+        &#34;&#34;&#34;
+        Given a file path and an output stream, send HTTP status, headers, and file contents as body
+
+        Args:
+            file_path (string): fully-qualified path to file
+            writer (object): the asyncio Stream object to which the file should be sent
+
+        Returns:
+            nothing
+        &#34;&#34;&#34;
+        file_type = await self.file_type(file_path)
+        file_size = await Thimble.file_size(file_path)
+        file_gzip_size = await Thimble.file_size(file_path + &#39;.gzip&#39;)
+
+        if file_size != None:  # a non-compressed file was found
+            writer.write(await Thimble.http_status_line(200))
+            writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
+            with open(file_path, &#39;rb&#39;) as file:
+                for chunk in Thimble.read_file_chunk(file):
+                    writer.write(chunk)
+                    await writer.drain()  # drain immediately after write to avoid memory allocation errors
+        elif file_gzip_size != None:  # a compressed file was found
+            writer.write(await Thimble.http_status_line(200))
+            writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding=&#39;gzip&#39;))
+            with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:
+                for chunk in Thimble.read_file_chunk(file):
+                    writer.write(chunk)
+                    await writer.drain()
+        else:  # no file was found
+            await self.send_error(404, writer)
+            print(f&#39;Error reading file: {file_path}&#39;)
+
+    def route(self, url_path, methods=[&#39;GET&#39;]):
+        &#34;&#34;&#34;
+        Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
+
+        Args:
+            url_path (string): path portion of a URL (ex. &#39;/path/to/thing&#39;) that will trigger a call to the function
+            methods (list): a list of any HTTP methods (eg. [&#39;GET&#39;, &#39;PUT&#39;]) that are used to trigger the call
+
+        Returns:
+            object: wrapper function
+        &#34;&#34;&#34;
+        regex_macros = {
+            &#39;&lt;digit&gt;&#39;: &#39;([0-9])&#39;,
+            &#39;&lt;float&gt;&#39;: &#39;([-+]?[0-9]*\.?[0-9]+)&#39;,
+            &#39;&lt;int&gt;&#39;: &#39;([0-9]+)&#39;,
+            &#39;&lt;string&gt;&#39;: &#39;(.*)&#39;
+        }
+
+        regex_match = search(&#39;(&lt;.*&gt;)&#39;, url_path)
+        if (regex_match):
+            url_path = url_path.replace(regex_match.group(
+                1), regex_macros[regex_match.group(1)])
+
+        def add_route(func):
+            for method in methods:
+                # Methods are uppercase (see RFC 9110)
+                self.routes[method.upper() + url_path] = func
+
+        return add_route
+
+    def resolve_route(self, route_pattern):
+        &#34;&#34;&#34;
+        Given a route pattern (METHOD + url_path), look up the corresponding function.
+
+        Args:
+            route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
+
+        Returns:
+            object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
+        &#34;&#34;&#34;
+        result = None
+        if (route_pattern in self.routes):  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
+            result = self.routes[route_pattern]
+        else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
+            for key in self.routes.keys():
+                regex_match = match(key, route_pattern)
+                if (regex_match):
+                    func = self.routes[key]
+                    wildcard_value = regex_match.group(1)
+                    if (self.debug):
+                        print(f&#39;Wildcard match: {wildcard_value}&#39;)
+                    result = func, wildcard_value
+
+        return result
+
+    async def on_connect(self, reader, writer):
+        &#34;&#34;&#34;
+        Connection handler for new client requests.
+
+        Args:
+            reader (stream): input received from the client
+            writer (stream): output to be sent to the client
+
+        Returns:
+            nothing
+        &#34;&#34;&#34;
+        client_ip = writer.get_extra_info(&#39;peername&#39;)[0]
+        if (self.debug):
+            print(f&#39;Connection from client: {client_ip}&#39;)
+
+        try:
+            req_buffer = await reader.read(self.req_buffer_size)
+            req = await Thimble.parse_http_request(req_buffer)
+            if (self.debug):
+                print(f&#39;Request: {req}&#39;)
+        except Exception as ex:
+            await self.send_error(400, writer)
+            print(f&#39;Unable to parse request: {ex}&#39;)
+        else:
+            route_value = self.resolve_route(req[&#39;method&#39;] + req[&#39;path&#39;])
+            if (isinstance(route_value, tuple)):  # a function and URL wildcard value were returned
+                await self.send_function_results(route_value[0], req, route_value[1], writer)
+            elif (route_value != None):  # just a function was returned
+                await self.send_function_results(route_value, req, None, writer)
+            else:  # nothing returned, try delivering static content instead
+                file_path = self.static_folder + req[&#39;path&#39;]
+                if (file_path.endswith(&#39;/&#39;)):
+                    # requests for &#39;/path/to&#39; become &#39;/path/to/index.html&#39;
+                    file_path = file_path + self.directory_index
+                await self.send_file_contents(file_path, writer)
+
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+        reader.close()
+        await reader.wait_closed()
+        if (self.debug):
+            print(f&#39;Connection closed for {client_ip}&#39;)
+
+    def run(self, host=&#39;0.0.0.0&#39;, port=80, loop=None, debug=False):
+        &#34;&#34;&#34;
+        Start an asynchronous listener for HTTP requests.
+
+        Args:
+            host (string): the IP address of the interface on which to listen
+            port (int): the TCP port on which to listen
+            loop (object): the asyncio loop that the server should insert itself into
+            debug (boolean): a flag to indicate verbose logging is desired
+
+        Returns:
+            object: the same loop object given as a parameter or a new one if no existing loop was passed
+        &#34;&#34;&#34;
+        self.debug = debug
+        print(f&#39;Listening on {host}:{port}&#39;)
+
+        if (loop == None):
+            loop = get_event_loop()
+            server = start_server(self.on_connect, host, port, 5)
+            loop.create_task(server)
+            loop.run_forever()
+        else:
+            server = start_server(self.on_connect, host, port, 5)
+            loop.create_task(server)
+
+        return loop</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="thimble.Thimble.server_name"><code class="name">var <span class="ident">server_name</span></code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 </dl>
- <p>
-<table class="section">
-<tr class="decor title-decor heading-text">
-<td class="section-title" colspan=3>&nbsp;<br><a name="Thimble">class <strong>Thimble</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
-
-<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
-<td class="decor title-decor" colspan=2><span class="code"><a href="#Thimble">Thimble</a>(default_content_type='application/octet-stream',&nbsp;req_buffer_size=1024)<br>
-&nbsp;<br>
-A&nbsp;tiny&nbsp;web&nbsp;framework&nbsp;in&nbsp;the&nbsp;spirit&nbsp;of&nbsp;Flask,&nbsp;scaled&nbsp;down&nbsp;to&nbsp;run&nbsp;on&nbsp;microcontrollers<br>&nbsp;</span></td></tr>
-<tr><td>&nbsp;</td>
-<td class="singlecolumn">Methods defined here:<br>
-<dl><dt><a name="Thimble-__init__"><strong>__init__</strong></a>(self, default_content_type='application/octet-stream', req_buffer_size=1024)</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-file_type"><strong>file_type</strong></a>(self, file_path)</dt><dd><span class="code">Return&nbsp;a&nbsp;standard&nbsp;media&nbsp;type&nbsp;/&nbsp;subtype&nbsp;based&nbsp;on&nbsp;file&nbsp;extension<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;file_path&nbsp;(string):&nbsp;file&nbsp;name&nbsp;or&nbsp;full&nbsp;path<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;string:&nbsp;media&nbsp;type&nbsp;as&nbsp;registered&nbsp;with&nbsp;the&nbsp;Internet&nbsp;Assigned&nbsp;Numbers&nbsp;Authority&nbsp;(IANA)</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-on_connect"><strong>on_connect</strong></a>(self, reader, writer)</dt><dd><span class="code">Connection&nbsp;handler&nbsp;for&nbsp;new&nbsp;client&nbsp;requests.<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;reader&nbsp;(stream):&nbsp;input&nbsp;received&nbsp;from&nbsp;the&nbsp;client<br>
-&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(stream):&nbsp;output&nbsp;to&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;client<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
-
-<dl><dt><a name="Thimble-resolve_route"><strong>resolve_route</strong></a>(self, route_pattern)</dt><dd><span class="code">Given&nbsp;a&nbsp;route&nbsp;pattern&nbsp;(METHOD&nbsp;+&nbsp;url_path),&nbsp;look&nbsp;up&nbsp;the&nbsp;corresponding&nbsp;function.<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;route_pattern&nbsp;(string):&nbsp;An&nbsp;uppercase&nbsp;HTTP&nbsp;method&nbsp;concatenated&nbsp;with&nbsp;a&nbsp;URL&nbsp;path&nbsp;wich&nbsp;may&nbsp;contain&nbsp;regex&nbsp;(ex:&nbsp;GET/gpio/([0-9+])$)<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="builtins.html#object">object</a>:&nbsp;reference&nbsp;to&nbsp;function&nbsp;(for&nbsp;non-regex&nbsp;URLs)&nbsp;or&nbsp;tuple&nbsp;with&nbsp;function&nbsp;and&nbsp;regex&nbsp;capture&nbsp;(for&nbsp;regex&nbsp;URLs)</span></dd></dl>
-
-<dl><dt><a name="Thimble-route"><strong>route</strong></a>(self, url_path, methods=['GET'])</dt><dd><span class="code">Given&nbsp;a&nbsp;URL&nbsp;path&nbsp;and&nbsp;list&nbsp;of&nbsp;zero&nbsp;or&nbsp;more&nbsp;HTTP&nbsp;methods,&nbsp;add&nbsp;the&nbsp;decorated&nbsp;function&nbsp;to&nbsp;the&nbsp;route&nbsp;table.<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;url_path&nbsp;(string):&nbsp;path&nbsp;portion&nbsp;of&nbsp;a&nbsp;URL&nbsp;(ex.&nbsp;'/path/to/thing')&nbsp;that&nbsp;will&nbsp;trigger&nbsp;a&nbsp;call&nbsp;to&nbsp;the&nbsp;function<br>
-&nbsp;&nbsp;&nbsp;&nbsp;methods&nbsp;(list):&nbsp;a&nbsp;list&nbsp;of&nbsp;any&nbsp;HTTP&nbsp;methods&nbsp;(eg.&nbsp;['GET',&nbsp;'PUT'])&nbsp;that&nbsp;are&nbsp;used&nbsp;to&nbsp;trigger&nbsp;the&nbsp;call<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="builtins.html#object">object</a>:&nbsp;wrapper&nbsp;function</span></dd></dl>
-
-<dl><dt><a name="Thimble-run"><strong>run</strong></a>(self, host='0.0.0.0', port=80, loop=None, debug=False)</dt><dd><span class="code">Start&nbsp;an&nbsp;asynchronous&nbsp;listener&nbsp;for&nbsp;HTTP&nbsp;requests.<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;host&nbsp;(string):&nbsp;the&nbsp;IP&nbsp;address&nbsp;of&nbsp;the&nbsp;interface&nbsp;on&nbsp;which&nbsp;to&nbsp;listen<br>
-&nbsp;&nbsp;&nbsp;&nbsp;port&nbsp;(int):&nbsp;the&nbsp;TCP&nbsp;port&nbsp;on&nbsp;which&nbsp;to&nbsp;listen<br>
-&nbsp;&nbsp;&nbsp;&nbsp;loop&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;asyncio&nbsp;loop&nbsp;that&nbsp;the&nbsp;server&nbsp;should&nbsp;insert&nbsp;itself&nbsp;into<br>
-&nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;(boolean):&nbsp;a&nbsp;flag&nbsp;to&nbsp;indicate&nbsp;verbose&nbsp;logging&nbsp;is&nbsp;desired<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="builtins.html#object">object</a>:&nbsp;the&nbsp;same&nbsp;loop&nbsp;<a href="builtins.html#object">object</a>&nbsp;given&nbsp;as&nbsp;a&nbsp;parameter&nbsp;or&nbsp;a&nbsp;new&nbsp;one&nbsp;if&nbsp;no&nbsp;existing&nbsp;loop&nbsp;was&nbsp;passed</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-send_error"><strong>send_error</strong></a>(self, error_number, writer)</dt><dd><span class="code">Given&nbsp;a&nbsp;stream&nbsp;and&nbsp;an&nbsp;HTTP&nbsp;error&nbsp;number,&nbsp;send&nbsp;a&nbsp;friendly&nbsp;text&nbsp;error&nbsp;message.<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;error_number&nbsp;(integer):&nbsp;HTTP&nbsp;status&nbsp;code<br>
-&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;asyncio&nbsp;Stream&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;file&nbsp;should&nbsp;be&nbsp;sent<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-send_file_contents"><strong>send_file_contents</strong></a>(self, file_path, writer)</dt><dd><span class="code">Given&nbsp;a&nbsp;file&nbsp;path&nbsp;and&nbsp;an&nbsp;output&nbsp;stream,&nbsp;send&nbsp;HTTP&nbsp;status,&nbsp;headers,&nbsp;and&nbsp;file&nbsp;contents&nbsp;as&nbsp;body<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;file_path&nbsp;(string):&nbsp;fully-qualified&nbsp;path&nbsp;to&nbsp;file<br>
-&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;asyncio&nbsp;Stream&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;file&nbsp;should&nbsp;be&nbsp;sent<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-send_function_results"><strong>send_function_results</strong></a>(self, func, req, url_wildcard, writer)</dt><dd><span class="code">Execute&nbsp;the&nbsp;given&nbsp;function&nbsp;with&nbsp;the&nbsp;HTTP&nbsp;reqest&nbsp;parameters&nbsp;as&nbsp;an&nbsp;argument&nbsp;and&nbsp;send&nbsp;the&nbsp;results&nbsp;as&nbsp;an&nbsp;HTTP&nbsp;reply<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;func&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;reference&nbsp;to&nbsp;the&nbsp;function&nbsp;to&nbsp;be&nbsp;executed&nbsp;or&nbsp;a&nbsp;tuple&nbsp;of&nbsp;function&nbsp;and&nbsp;URL&nbsp;wildcard<br>
-&nbsp;&nbsp;&nbsp;&nbsp;req&nbsp;(dictionary):&nbsp;HTTP&nbsp;request&nbsp;parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;url_wildcard&nbsp;(various&nbsp;types):&nbsp;regex-matched&nbsp;portion&nbsp;of&nbsp;the&nbsp;url_path&nbsp;(or&nbsp;None&nbsp;for&nbsp;non-regex&nbsp;routes)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;asyncio&nbsp;Stream&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;results&nbsp;should&nbsp;be&nbsp;sent<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
-
-<hr>
-Static methods defined here:<br>
-<dl><dt>async <a name="Thimble-file_size"><strong>file_size</strong></a>(file_path)</dt><dd><span class="code">Given&nbsp;a&nbsp;path&nbsp;to&nbsp;a&nbsp;file,&nbsp;return&nbsp;the&nbsp;file's&nbsp;size&nbsp;or&nbsp;None&nbsp;if&nbsp;there's&nbsp;an&nbsp;exception&nbsp;when&nbsp;checking.<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;file_path&nbsp;(string):&nbsp;a&nbsp;fully-qualified&nbsp;path&nbsp;to&nbsp;the&nbsp;location&nbsp;of&nbsp;the&nbsp;file<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;size&nbsp;in&nbsp;bytes&nbsp;or&nbsp;None&nbsp;if&nbsp;there&nbsp;was&nbsp;a&nbsp;problem&nbsp;obtaining&nbsp;the&nbsp;size&nbsp;(e.g.&nbsp;file&nbsp;does&nbsp;not&nbsp;exist)</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-http_headers"><strong>http_headers</strong></a>(content_length=0, content_type='', content_encoding='')</dt><dd><span class="code">Generate&nbsp;appropriate&nbsp;HTTP&nbsp;response&nbsp;headers&nbsp;based&nbsp;on&nbsp;content&nbsp;properties<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;content_length&nbsp;(int):&nbsp;length&nbsp;of&nbsp;body,&nbsp;used&nbsp;for&nbsp;Content-Length&nbsp;header<br>
-&nbsp;&nbsp;&nbsp;&nbsp;content_type&nbsp;(string):&nbsp;media-type&nbsp;of&nbsp;body,&nbsp;used&nbsp;for&nbsp;Content-Type&nbsp;header<br>
-&nbsp;&nbsp;&nbsp;&nbsp;content_encoding(string):&nbsp;compression&nbsp;type,&nbsp;used&nbsp;for&nbsp;Content-Encoding&nbsp;header<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;string:&nbsp;HTTP&nbsp;headers&nbsp;separated&nbsp;by</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-http_status_line"><strong>http_status_line</strong></a>(status_code)</dt><dd><span class="code">Given&nbsp;an&nbsp;HTTP&nbsp;status&nbsp;code&nbsp;(e.g.&nbsp;200,&nbsp;404,&nbsp;etc.),&nbsp;format&nbsp;the&nbsp;server&nbsp;response&nbsp;status&nbsp;line<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;status_code&nbsp;(int):&nbsp;the&nbsp;HTTP&nbsp;status&nbsp;code&nbsp;as&nbsp;defined&nbsp;by&nbsp;<a href="https://www.rfc-editor.org/rfc/rfc7231.txt">RFC&nbsp;7231</a>&nbsp;Respone&nbsp;Status&nbsp;Codes&nbsp;(ex.&nbsp;200)<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;string:&nbsp;HTTP&nbsp;status&nbsp;line&nbsp;with&nbsp;protocol&nbsp;version,&nbsp;numeric&nbsp;status&nbsp;code,&nbsp;and&nbsp;corresponding&nbsp;status&nbsp;text</span></dd></dl>
-
-<dl><dt><a name="Thimble-is_async"><strong>is_async</strong></a>(func)</dt><dd><span class="code">Determine&nbsp;if&nbsp;a&nbsp;function&nbsp;is&nbsp;async&nbsp;not&nbsp;by&nbsp;comparing&nbsp;its&nbsp;type&nbsp;to&nbsp;known&nbsp;async&nbsp;and&nbsp;regular&nbsp;functions.<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;func&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;function&nbsp;being&nbsp;examined<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;boolean:&nbsp;True&nbsp;if&nbsp;the&nbsp;function&nbsp;was&nbsp;defined&nbsp;as&nbsp;asynchronous,&nbsp;False&nbsp;if&nbsp;not,&nbsp;and&nbsp;None&nbsp;if&nbsp;unknown</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-parse_http_request"><strong>parse_http_request</strong></a>(req_buffer)</dt><dd><span class="code">Given&nbsp;a&nbsp;raw&nbsp;HTTP&nbsp;request,&nbsp;return&nbsp;a&nbsp;dictionary&nbsp;with&nbsp;individual&nbsp;elements&nbsp;broken&nbsp;out<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;req_buffer&nbsp;(bytes):&nbsp;the&nbsp;unprocessed&nbsp;HTTP&nbsp;request&nbsp;sent&nbsp;from&nbsp;the&nbsp;client<br>
-&nbsp;<br>
-Raises:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;exception:&nbsp;when&nbsp;the&nbsp;request&nbsp;buffer&nbsp;is&nbsp;empty<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;dictionary:&nbsp;key/value&nbsp;pairs&nbsp;including,&nbsp;but&nbsp;not&nbsp;limited&nbsp;to&nbsp;method,&nbsp;path,&nbsp;query,&nbsp;headers,&nbsp;body,&nbsp;etc.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;None&nbsp;type&nbsp;if&nbsp;parsing&nbsp;fails</span></dd></dl>
-
-<dl><dt><a name="Thimble-parse_query_string"><strong>parse_query_string</strong></a>(query_string)</dt><dd><span class="code">Split&nbsp;a&nbsp;URL's&nbsp;query&nbsp;string&nbsp;into&nbsp;individual&nbsp;key/value&nbsp;pairs<br>
-(ex:&nbsp;'pet=Panda&amp;color=Red'&nbsp;becomes&nbsp;{&nbsp;"pet":&nbsp;"panda",&nbsp;"color":&nbsp;"red"}<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;query_string&nbsp;(string):&nbsp;the&nbsp;query&nbsp;string&nbsp;portion&nbsp;of&nbsp;a&nbsp;URL&nbsp;(without&nbsp;the&nbsp;leading&nbsp;?&nbsp;delimiter)<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;dictionary:&nbsp;key/value&nbsp;pairs</span></dd></dl>
-
-<dl><dt><a name="Thimble-read_file_chunk"><strong>read_file_chunk</strong></a>(file)</dt><dd><span class="code">Given&nbsp;a&nbsp;file&nbsp;handle,&nbsp;read&nbsp;the&nbsp;file&nbsp;in&nbsp;small&nbsp;chunks&nbsp;to&nbsp;avoid&nbsp;large&nbsp;buffer&nbsp;requirements.<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;file&nbsp;handle&nbsp;returned&nbsp;by&nbsp;open()<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;bytes:&nbsp;a&nbsp;chunk&nbsp;of&nbsp;the&nbsp;file&nbsp;until&nbsp;the&nbsp;file&nbsp;ends,&nbsp;then&nbsp;nothing</span></dd></dl>
-
-<hr>
-Data descriptors defined here:<br>
-<dl><dt><strong>__dict__</strong></dt>
-<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</span></dd>
+<h3>Static methods</h3>
+<dl>
+<dt id="thimble.Thimble.file_size"><code class="name flex">
+<span>async def <span class="ident">file_size</span></span>(<span>file_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a path to a file, return the file's size or None if there's an exception when checking.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file_path</code></strong> :&ensp;<code>string</code></dt>
+<dd>a fully-qualified path to the location of the file</dd>
 </dl>
-<dl><dt><strong>__weakref__</strong></dt>
-<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</span></dd>
+<h2 id="returns">Returns</h2>
+<p>file size in bytes or None if there was a problem obtaining the size (e.g. file does not exist)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+async def file_size(file_path):
+    &#34;&#34;&#34;
+    Given a path to a file, return the file&#39;s size or None if there&#39;s an exception when checking.
+
+    Args:
+        file_path (string): a fully-qualified path to the location of the file
+
+    Returns:
+        file size in bytes or None if there was a problem obtaining the size (e.g. file does not exist)
+    &#34;&#34;&#34;
+
+    try:
+        size = stat(file_path)[6]
+    except Exception as ex:
+        size = None
+
+    return size</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.http_headers"><code class="name flex">
+<span>async def <span class="ident">http_headers</span></span>(<span>content_length=0, content_type='', content_encoding='')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate appropriate HTTP response headers based on content properties</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>content_length</code></strong> :&ensp;<code>int</code></dt>
+<dd>length of body, used for Content-Length header</dd>
+<dt><strong><code>content_type</code></strong> :&ensp;<code>string</code></dt>
+<dd>media-type of body, used for Content-Type header</dd>
 </dl>
-<hr>
-Data and other attributes defined here:<br>
-<dl><dt><strong>server_name</strong> = 'Thimble (MicroPython)'</dl>
+<p>content_encoding(string): compression type, used for Content-Encoding header</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>string</code></dt>
+<dd>HTTP headers separated by</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+async def http_headers(content_length=0, content_type=&#39;&#39;, content_encoding=&#39;&#39;):
+    &#34;&#34;&#34;
+    Generate appropriate HTTP response headers based on content properties
 
-</td></tr></table></td></tr></table><p>
-<table class="section">
-<tr class="decor functions-decor heading-text">
-<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Functions</strong></td></tr>
+    Args:
+        content_length (int): length of body, used for Content-Length header
+        content_type (string): media-type of body, used for Content-Type header
+        content_encoding(string): compression type, used for Content-Encoding header
 
-<tr><td class="decor functions-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
-<td class="singlecolumn"><dl><dt><a name="-get_event_loop"><strong>get_event_loop</strong></a>()</dt><dd><span class="code">Return&nbsp;an&nbsp;asyncio&nbsp;event&nbsp;loop.<br>
-&nbsp;<br>
-When&nbsp;called&nbsp;from&nbsp;a&nbsp;coroutine&nbsp;or&nbsp;a&nbsp;callback&nbsp;(e.g.&nbsp;scheduled&nbsp;with<br>
-call_soon&nbsp;or&nbsp;similar&nbsp;API),&nbsp;this&nbsp;function&nbsp;will&nbsp;always&nbsp;return&nbsp;the<br>
-running&nbsp;event&nbsp;loop.<br>
-&nbsp;<br>
-If&nbsp;there&nbsp;is&nbsp;no&nbsp;running&nbsp;event&nbsp;loop&nbsp;set,&nbsp;the&nbsp;function&nbsp;will&nbsp;return<br>
-the&nbsp;result&nbsp;of&nbsp;`get_event_loop_policy().<a href="#-get_event_loop">get_event_loop</a>()`&nbsp;call.</span></dd></dl>
- <dl><dt><a name="-stat"><strong>stat</strong></a>(path, *, dir_fd=None, follow_symlinks=True)</dt><dd><span class="code">Perform&nbsp;a&nbsp;stat&nbsp;system&nbsp;call&nbsp;on&nbsp;the&nbsp;given&nbsp;path.<br>
-&nbsp;<br>
-&nbsp;&nbsp;path<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Path&nbsp;to&nbsp;be&nbsp;examined;&nbsp;can&nbsp;be&nbsp;string,&nbsp;bytes,&nbsp;a&nbsp;path-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;or<br>
-&nbsp;&nbsp;&nbsp;&nbsp;open-file-descriptor&nbsp;int.<br>
-&nbsp;&nbsp;dir_fd<br>
-&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;not&nbsp;None,&nbsp;it&nbsp;should&nbsp;be&nbsp;a&nbsp;file&nbsp;descriptor&nbsp;open&nbsp;to&nbsp;a&nbsp;directory,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;path&nbsp;should&nbsp;be&nbsp;a&nbsp;relative&nbsp;string;&nbsp;path&nbsp;will&nbsp;then&nbsp;be&nbsp;relative&nbsp;to<br>
-&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;directory.<br>
-&nbsp;&nbsp;follow_symlinks<br>
-&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;False,&nbsp;and&nbsp;the&nbsp;last&nbsp;element&nbsp;of&nbsp;the&nbsp;path&nbsp;is&nbsp;a&nbsp;symbolic&nbsp;link,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;stat&nbsp;will&nbsp;examine&nbsp;the&nbsp;symbolic&nbsp;link&nbsp;itself&nbsp;instead&nbsp;of&nbsp;the&nbsp;file<br>
-&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;link&nbsp;points&nbsp;to.<br>
-&nbsp;<br>
-dir_fd&nbsp;and&nbsp;follow_symlinks&nbsp;may&nbsp;not&nbsp;be&nbsp;implemented<br>
-&nbsp;&nbsp;on&nbsp;your&nbsp;platform.&nbsp;&nbsp;If&nbsp;they&nbsp;are&nbsp;unavailable,&nbsp;using&nbsp;them&nbsp;will&nbsp;raise&nbsp;a<br>
-&nbsp;&nbsp;NotImplementedError.<br>
-&nbsp;<br>
-It's&nbsp;an&nbsp;error&nbsp;to&nbsp;use&nbsp;dir_fd&nbsp;or&nbsp;follow_symlinks&nbsp;when&nbsp;specifying&nbsp;path&nbsp;as<br>
-&nbsp;&nbsp;an&nbsp;open&nbsp;file&nbsp;descriptor.</span></dd></dl>
-</td></tr></table>
-</body></html>
+    Returns:
+        string: HTTP headers separated by \r\n
+    &#34;&#34;&#34;
+    headers = &#39;Connection: close\r\n&#39;
+    if content_encoding != &#39;&#39;:
+        headers += f&#39;Content-Encoding: {content_encoding}\r\n&#39;
+    headers += f&#39;Content-Length: {content_length}\r\n&#39;
+    if content_type != &#39;&#39;:
+        headers += f&#39;Content-Type: {content_type}\r\n&#39;
+    headers += f&#39;Server: {Thimble.server_name}\r\n&#39;
+    headers += &#39;\r\n&#39;  # blank line signifies end of headers
+
+    return headers</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.http_status_line"><code class="name flex">
+<span>async def <span class="ident">http_status_line</span></span>(<span>status_code)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given an HTTP status code (e.g. 200, 404, etc.), format the server response status line</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>status_code</code></strong> :&ensp;<code>int</code></dt>
+<dd>the HTTP status code as defined by RFC 7231 Respone Status Codes (ex. 200)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>string</code></dt>
+<dd>HTTP status line with protocol version, numeric status code, and corresponding status text</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+async def http_status_line(status_code):
+    &#34;&#34;&#34;
+    Given an HTTP status code (e.g. 200, 404, etc.), format the server response status line
+
+    Args:
+        status_code (int): the HTTP status code as defined by RFC 7231 Respone Status Codes (ex. 200)
+
+    Returns:
+        string: HTTP status line with protocol version, numeric status code, and corresponding status text
+    &#34;&#34;&#34;
+    http_status_message = {
+        200: &#34;200 OK&#34;,
+        302: &#34;302 Found&#34;,
+        400: &#34;400 Bad Request&#34;,
+        404: &#34;404 Not Found&#34;,
+        500: &#34;500 Internal Server Error&#34;
+    }
+
+    if (status_code == None or status_code not in http_status_message):
+        status_code = 500
+
+    return f&#39;HTTP/1.1 {http_status_message[status_code]}\r\n&#39;</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.is_async"><code class="name flex">
+<span>def <span class="ident">is_async</span></span>(<span>func)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determine if a function is async not by comparing its type to known async and regular functions.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>func</code></strong> :&ensp;<code>object</code></dt>
+<dd>a reference to the function being examined</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>boolean</code></dt>
+<dd>True if the function was defined as asynchronous, False if not, and None if unknown</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def is_async(func):
+    &#34;&#34;&#34;
+    Determine if a function is async not by comparing its type to known async and regular functions.
+
+    Args:
+        func (object): a reference to the function being examined
+
+    Returns:
+        boolean: True if the function was defined as asynchronous, False if not, and None if unknown
+    &#34;&#34;&#34;
+    if (type(func) == type(Thimble.on_connect)):
+        return True  # It&#39;s an async function
+    elif (type(func) == type(Thimble.run)):
+        return False  # It&#39;s a regular function
+    else:
+        return None  # It&#39;s not a function</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.parse_http_request"><code class="name flex">
+<span>async def <span class="ident">parse_http_request</span></span>(<span>req_buffer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a raw HTTP request, return a dictionary with individual elements broken out</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>req_buffer</code></strong> :&ensp;<code>bytes</code></dt>
+<dd>the unprocessed HTTP request sent from the client</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>exception</code></dt>
+<dd>when the request buffer is empty</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dictionary</code></dt>
+<dd>key/value pairs including, but not limited to method, path, query, headers, body, etc.
+or None type if parsing fails</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+async def parse_http_request(req_buffer):
+    &#34;&#34;&#34;
+    Given a raw HTTP request, return a dictionary with individual elements broken out
+
+    Args:
+        req_buffer (bytes): the unprocessed HTTP request sent from the client
+
+    Raises:
+        exception: when the request buffer is empty
+
+    Returns:
+        dictionary: key/value pairs including, but not limited to method, path, query, headers, body, etc.
+            or None type if parsing fails
+    &#34;&#34;&#34;
+    assert (req_buffer != b&#39;&#39;), &#39;Empty request buffer.&#39;
+
+    req = {}
+    req_buffer_string = req_buffer.decode(&#39;utf8&#39;)
+    req_buffer_lines = req_buffer_string.split(&#39;\r\n&#39;)
+    del req_buffer_string  # free up or garbage collection
+
+    req[&#39;method&#39;], target, req[&#39;http_version&#39;] = req_buffer_lines[0].split(
+        &#39; &#39;, 2)  # Example: GET /route/path HTTP/1.1
+    if (not &#39;?&#39; in target):
+        req[&#39;path&#39;] = target
+    else:  # target can have a query component, so /route/path could be something like /route/path?state=on&amp;timeout=30
+        req[&#39;path&#39;], query_string = target.split(&#39;?&#39;, 1)
+        req[&#39;query&#39;] = Thimble.parse_query_string(query_string)
+
+    req[&#39;headers&#39;] = {}
+    for i in range(1, len(req_buffer_lines) - 1):
+        # Blank line signifies the end of headers.
+        if (req_buffer_lines[i] == &#39;&#39;):
+            break
+        else:
+            name, value = req_buffer_lines[i].split(&#39;:&#39;, 1)
+            req[&#39;headers&#39;][name.strip()] = value.strip()
+
+    # Last line is the body (or blank if no body.)
+    req[&#39;body&#39;] = req_buffer_lines[len(req_buffer_lines) - 1]
+
+    return req</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.parse_query_string"><code class="name flex">
+<span>def <span class="ident">parse_query_string</span></span>(<span>query_string)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Split a URL's query string into individual key/value pairs
+(ex: 'pet=Panda&amp;color=Red' becomes { "pet": "panda", "color": "red"}</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>query_string</code></strong> :&ensp;<code>string</code></dt>
+<dd>the query string portion of a URL (without the leading ? delimiter)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dictionary</code></dt>
+<dd>key/value pairs</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse_query_string(query_string):
+    &#34;&#34;&#34;
+    Split a URL&#39;s query string into individual key/value pairs
+    (ex: &#39;pet=Panda&amp;color=Red&#39; becomes { &#34;pet&#34;: &#34;panda&#34;, &#34;color&#34;: &#34;red&#34;}
+    Args:
+        query_string (string): the query string portion of a URL (without the leading ? delimiter)
+
+    Returns:
+        dictionary: key/value pairs
+    &#34;&#34;&#34;
+    query = {}
+    query_params = query_string.split(&#39;&amp;&#39;)
+    for param in query_params:
+        if (not &#39;=&#39; in param):  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
+            key = param
+            query[key] = &#39;&#39;
+        else:
+            key, value = param.split(&#39;=&#39;)
+            query[key] = value
+
+    return query</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.read_file_chunk"><code class="name flex">
+<span>def <span class="ident">read_file_chunk</span></span>(<span>file)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a file handle, read the file in small chunks to avoid large buffer requirements.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file</code></strong> :&ensp;<code>object</code></dt>
+<dd>the file handle returned by open()</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bytes</code></dt>
+<dd>a chunk of the file until the file ends, then nothing</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def read_file_chunk(file):
+    &#34;&#34;&#34;
+    Given a file handle, read the file in small chunks to avoid large buffer requirements.
+
+    Args:
+        file (object): the file handle returned by open()
+
+    Returns:
+        bytes: a chunk of the file until the file ends, then nothing
+    &#34;&#34;&#34;
+    while True:
+        chunk = file.read(64)  # small chunks to avoid out of memory errors
+        if chunk:
+            yield chunk
+        else:  # empty chunk means end of the file
+            return</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="thimble.Thimble.file_type"><code class="name flex">
+<span>async def <span class="ident">file_type</span></span>(<span>self, file_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a standard media type / subtype based on file extension</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file_path</code></strong> :&ensp;<code>string</code></dt>
+<dd>file name or full path</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>string</code></dt>
+<dd>media type as registered with the Internet Assigned Numbers Authority (IANA)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def file_type(self, file_path):
+    &#34;&#34;&#34;
+    Return a standard media type / subtype based on file extension
+
+    Args:
+        file_path (string): file name or full path
+
+    Returns:
+        string: media type as registered with the Internet Assigned Numbers Authority (IANA)
+    &#34;&#34;&#34;
+    file_ext = file_path.split(&#39;.&#39;)[-1]
+    if (file_ext not in self.media_types):
+        return self.default_content_type
+    else:
+        return self.media_types[file_ext]</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.on_connect"><code class="name flex">
+<span>async def <span class="ident">on_connect</span></span>(<span>self, reader, writer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Connection handler for new client requests.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>reader</code></strong> :&ensp;<code>stream</code></dt>
+<dd>input received from the client</dd>
+<dt><strong><code>writer</code></strong> :&ensp;<code>stream</code></dt>
+<dd>output to be sent to the client</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>nothing</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def on_connect(self, reader, writer):
+    &#34;&#34;&#34;
+    Connection handler for new client requests.
+
+    Args:
+        reader (stream): input received from the client
+        writer (stream): output to be sent to the client
+
+    Returns:
+        nothing
+    &#34;&#34;&#34;
+    client_ip = writer.get_extra_info(&#39;peername&#39;)[0]
+    if (self.debug):
+        print(f&#39;Connection from client: {client_ip}&#39;)
+
+    try:
+        req_buffer = await reader.read(self.req_buffer_size)
+        req = await Thimble.parse_http_request(req_buffer)
+        if (self.debug):
+            print(f&#39;Request: {req}&#39;)
+    except Exception as ex:
+        await self.send_error(400, writer)
+        print(f&#39;Unable to parse request: {ex}&#39;)
+    else:
+        route_value = self.resolve_route(req[&#39;method&#39;] + req[&#39;path&#39;])
+        if (isinstance(route_value, tuple)):  # a function and URL wildcard value were returned
+            await self.send_function_results(route_value[0], req, route_value[1], writer)
+        elif (route_value != None):  # just a function was returned
+            await self.send_function_results(route_value, req, None, writer)
+        else:  # nothing returned, try delivering static content instead
+            file_path = self.static_folder + req[&#39;path&#39;]
+            if (file_path.endswith(&#39;/&#39;)):
+                # requests for &#39;/path/to&#39; become &#39;/path/to/index.html&#39;
+                file_path = file_path + self.directory_index
+            await self.send_file_contents(file_path, writer)
+
+    await writer.drain()
+    writer.close()
+    await writer.wait_closed()
+    reader.close()
+    await reader.wait_closed()
+    if (self.debug):
+        print(f&#39;Connection closed for {client_ip}&#39;)</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.resolve_route"><code class="name flex">
+<span>def <span class="ident">resolve_route</span></span>(<span>self, route_pattern)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a route pattern (METHOD + url_path), look up the corresponding function.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>route_pattern</code></strong> :&ensp;<code>string</code></dt>
+<dd>An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>object</code></dt>
+<dd>reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve_route(self, route_pattern):
+    &#34;&#34;&#34;
+    Given a route pattern (METHOD + url_path), look up the corresponding function.
+
+    Args:
+        route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
+
+    Returns:
+        object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
+    &#34;&#34;&#34;
+    result = None
+    if (route_pattern in self.routes):  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
+        result = self.routes[route_pattern]
+    else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
+        for key in self.routes.keys():
+            regex_match = match(key, route_pattern)
+            if (regex_match):
+                func = self.routes[key]
+                wildcard_value = regex_match.group(1)
+                if (self.debug):
+                    print(f&#39;Wildcard match: {wildcard_value}&#39;)
+                result = func, wildcard_value
+
+    return result</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.route"><code class="name flex">
+<span>def <span class="ident">route</span></span>(<span>self, url_path, methods=['GET'])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>url_path</code></strong> :&ensp;<code>string</code></dt>
+<dd>path portion of a URL (ex. '/path/to/thing') that will trigger a call to the function</dd>
+<dt><strong><code>methods</code></strong> :&ensp;<code>list</code></dt>
+<dd>a list of any HTTP methods (eg. ['GET', 'PUT']) that are used to trigger the call</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>object</code></dt>
+<dd>wrapper function</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def route(self, url_path, methods=[&#39;GET&#39;]):
+    &#34;&#34;&#34;
+    Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
+
+    Args:
+        url_path (string): path portion of a URL (ex. &#39;/path/to/thing&#39;) that will trigger a call to the function
+        methods (list): a list of any HTTP methods (eg. [&#39;GET&#39;, &#39;PUT&#39;]) that are used to trigger the call
+
+    Returns:
+        object: wrapper function
+    &#34;&#34;&#34;
+    regex_macros = {
+        &#39;&lt;digit&gt;&#39;: &#39;([0-9])&#39;,
+        &#39;&lt;float&gt;&#39;: &#39;([-+]?[0-9]*\.?[0-9]+)&#39;,
+        &#39;&lt;int&gt;&#39;: &#39;([0-9]+)&#39;,
+        &#39;&lt;string&gt;&#39;: &#39;(.*)&#39;
+    }
+
+    regex_match = search(&#39;(&lt;.*&gt;)&#39;, url_path)
+    if (regex_match):
+        url_path = url_path.replace(regex_match.group(
+            1), regex_macros[regex_match.group(1)])
+
+    def add_route(func):
+        for method in methods:
+            # Methods are uppercase (see RFC 9110)
+            self.routes[method.upper() + url_path] = func
+
+    return add_route</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self, host='0.0.0.0', port=80, loop=None, debug=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Start an asynchronous listener for HTTP requests.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>host</code></strong> :&ensp;<code>string</code></dt>
+<dd>the IP address of the interface on which to listen</dd>
+<dt><strong><code>port</code></strong> :&ensp;<code>int</code></dt>
+<dd>the TCP port on which to listen</dd>
+<dt><strong><code>loop</code></strong> :&ensp;<code>object</code></dt>
+<dd>the asyncio loop that the server should insert itself into</dd>
+<dt><strong><code>debug</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>a flag to indicate verbose logging is desired</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>object</code></dt>
+<dd>the same loop object given as a parameter or a new one if no existing loop was passed</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(self, host=&#39;0.0.0.0&#39;, port=80, loop=None, debug=False):
+    &#34;&#34;&#34;
+    Start an asynchronous listener for HTTP requests.
+
+    Args:
+        host (string): the IP address of the interface on which to listen
+        port (int): the TCP port on which to listen
+        loop (object): the asyncio loop that the server should insert itself into
+        debug (boolean): a flag to indicate verbose logging is desired
+
+    Returns:
+        object: the same loop object given as a parameter or a new one if no existing loop was passed
+    &#34;&#34;&#34;
+    self.debug = debug
+    print(f&#39;Listening on {host}:{port}&#39;)
+
+    if (loop == None):
+        loop = get_event_loop()
+        server = start_server(self.on_connect, host, port, 5)
+        loop.create_task(server)
+        loop.run_forever()
+    else:
+        server = start_server(self.on_connect, host, port, 5)
+        loop.create_task(server)
+
+    return loop</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.send_error"><code class="name flex">
+<span>async def <span class="ident">send_error</span></span>(<span>self, error_number, writer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a stream and an HTTP error number, send a friendly text error message.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>error_number</code></strong> :&ensp;<code>integer</code></dt>
+<dd>HTTP status code</dd>
+<dt><strong><code>writer</code></strong> :&ensp;<code>object</code></dt>
+<dd>the asyncio Stream object to which the file should be sent</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>nothing</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def send_error(self, error_number, writer):
+    &#34;&#34;&#34;
+    Given a stream and an HTTP error number, send a friendly text error message.
+
+    Args:
+        error_number (integer): HTTP status code
+        writer (object): the asyncio Stream object to which the file should be sent
+
+    Returns:
+        nothing
+    &#34;&#34;&#34;
+    writer.write(await Thimble.http_status_line(error_number))
+    error_text = f&#39;{self.error_text[error_number]}\r\n&#39;
+    writer.write(await Thimble.http_headers(content_type=&#39;text/plain&#39;, content_length=len(error_text)))
+    writer.write(error_text)
+    await writer.drain()</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.send_file_contents"><code class="name flex">
+<span>async def <span class="ident">send_file_contents</span></span>(<span>self, file_path, writer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a file path and an output stream, send HTTP status, headers, and file contents as body</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file_path</code></strong> :&ensp;<code>string</code></dt>
+<dd>fully-qualified path to file</dd>
+<dt><strong><code>writer</code></strong> :&ensp;<code>object</code></dt>
+<dd>the asyncio Stream object to which the file should be sent</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>nothing</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def send_file_contents(self, file_path, writer):
+    &#34;&#34;&#34;
+    Given a file path and an output stream, send HTTP status, headers, and file contents as body
+
+    Args:
+        file_path (string): fully-qualified path to file
+        writer (object): the asyncio Stream object to which the file should be sent
+
+    Returns:
+        nothing
+    &#34;&#34;&#34;
+    file_type = await self.file_type(file_path)
+    file_size = await Thimble.file_size(file_path)
+    file_gzip_size = await Thimble.file_size(file_path + &#39;.gzip&#39;)
+
+    if file_size != None:  # a non-compressed file was found
+        writer.write(await Thimble.http_status_line(200))
+        writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
+        with open(file_path, &#39;rb&#39;) as file:
+            for chunk in Thimble.read_file_chunk(file):
+                writer.write(chunk)
+                await writer.drain()  # drain immediately after write to avoid memory allocation errors
+    elif file_gzip_size != None:  # a compressed file was found
+        writer.write(await Thimble.http_status_line(200))
+        writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding=&#39;gzip&#39;))
+        with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:
+            for chunk in Thimble.read_file_chunk(file):
+                writer.write(chunk)
+                await writer.drain()
+    else:  # no file was found
+        await self.send_error(404, writer)
+        print(f&#39;Error reading file: {file_path}&#39;)</code></pre>
+</details>
+</dd>
+<dt id="thimble.Thimble.send_function_results"><code class="name flex">
+<span>async def <span class="ident">send_function_results</span></span>(<span>self, func, req, url_wildcard, writer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute the given function with the HTTP reqest parameters as an argument and send the results as an HTTP reply</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>func</code></strong> :&ensp;<code>object</code></dt>
+<dd>reference to the function to be executed or a tuple of function and URL wildcard</dd>
+<dt><strong><code>req</code></strong> :&ensp;<code>dictionary</code></dt>
+<dd>HTTP request parameters</dd>
+<dt><strong><code>url_wildcard</code></strong> :&ensp;<code>various types</code></dt>
+<dd>regex-matched portion of the url_path (or None for non-regex routes)</dd>
+<dt><strong><code>writer</code></strong> :&ensp;<code>object</code></dt>
+<dd>the asyncio Stream object to which the results should be sent</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>nothing</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def send_function_results(self, func, req, url_wildcard, writer):
+    &#34;&#34;&#34;
+    Execute the given function with the HTTP reqest parameters as an argument and send the results as an HTTP reply
+
+    Args:
+        func (object): reference to the function to be executed or a tuple of function and URL wildcard
+        req (dictionary): HTTP request parameters
+        url_wildcard (various types): regex-matched portion of the url_path (or None for non-regex routes)
+        writer (object): the asyncio Stream object to which the results should be sent
+
+    Returns:
+        nothing
+    &#34;&#34;&#34;
+    try:
+        if (Thimble.is_async(func) == True):  # await the async function
+            if (url_wildcard != None):
+                func_result = await func(req, url_wildcard)
+            else:
+                func_result = await func(req)
+        else:  # no awaiting required for non-async
+            if (url_wildcard != None):
+                func_result = func(req, url_wildcard)
+            else:
+                func_result = func(req)
+
+    except Exception as ex:
+        await self.send_error(500, writer)
+        print(f&#39;Function call failed: {ex}&#39;)
+    else:
+        if (isinstance(func_result, tuple) and len(func_result) == 3):
+            body, status_code, content_type = func_result
+        elif (isinstance(func_result, tuple) and len(func_result) == 2):
+            body, status_code = func_result
+            content_type = &#39;text/plain&#39;
+        else:
+            body = func_result
+            status_code = 200
+            content_type = &#39;text/plain&#39;
+
+        if (not isinstance(body, str)):
+            body = str(body)
+        writer.write(await Thimble.http_status_line(status_code))
+        writer.write(await Thimble.http_headers(content_length=len(body), content_type=content_type))
+        await writer.drain()
+        writer.write(body)
+        await writer.drain()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="thimble.Thimble" href="#thimble.Thimble">Thimble</a></code></h4>
+<ul class="">
+<li><code><a title="thimble.Thimble.file_size" href="#thimble.Thimble.file_size">file_size</a></code></li>
+<li><code><a title="thimble.Thimble.file_type" href="#thimble.Thimble.file_type">file_type</a></code></li>
+<li><code><a title="thimble.Thimble.http_headers" href="#thimble.Thimble.http_headers">http_headers</a></code></li>
+<li><code><a title="thimble.Thimble.http_status_line" href="#thimble.Thimble.http_status_line">http_status_line</a></code></li>
+<li><code><a title="thimble.Thimble.is_async" href="#thimble.Thimble.is_async">is_async</a></code></li>
+<li><code><a title="thimble.Thimble.on_connect" href="#thimble.Thimble.on_connect">on_connect</a></code></li>
+<li><code><a title="thimble.Thimble.parse_http_request" href="#thimble.Thimble.parse_http_request">parse_http_request</a></code></li>
+<li><code><a title="thimble.Thimble.parse_query_string" href="#thimble.Thimble.parse_query_string">parse_query_string</a></code></li>
+<li><code><a title="thimble.Thimble.read_file_chunk" href="#thimble.Thimble.read_file_chunk">read_file_chunk</a></code></li>
+<li><code><a title="thimble.Thimble.resolve_route" href="#thimble.Thimble.resolve_route">resolve_route</a></code></li>
+<li><code><a title="thimble.Thimble.route" href="#thimble.Thimble.route">route</a></code></li>
+<li><code><a title="thimble.Thimble.run" href="#thimble.Thimble.run">run</a></code></li>
+<li><code><a title="thimble.Thimble.send_error" href="#thimble.Thimble.send_error">send_error</a></code></li>
+<li><code><a title="thimble.Thimble.send_file_contents" href="#thimble.Thimble.send_file_contents">send_file_contents</a></code></li>
+<li><code><a title="thimble.Thimble.send_function_results" href="#thimble.Thimble.send_function_results">send_function_results</a></code></li>
+<li><code><a title="thimble.Thimble.server_name" href="#thimble.Thimble.server_name">server_name</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

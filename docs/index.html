@@ -30,12 +30,20 @@
 <td class="section-title" colspan=3>&nbsp;<br><a name="Thimble">class <strong>Thimble</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
 
 <tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
-<td class="decor title-decor" colspan=2><span class="code"><a href="#Thimble">Thimble</a>(default_content_type='text/plain',&nbsp;req_buffer_size=1024)<br>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#Thimble">Thimble</a>(default_content_type='application/octet-stream',&nbsp;req_buffer_size=1024)<br>
 &nbsp;<br>
 A&nbsp;tiny&nbsp;web&nbsp;framework&nbsp;in&nbsp;the&nbsp;spirit&nbsp;of&nbsp;Flask,&nbsp;scaled&nbsp;down&nbsp;to&nbsp;run&nbsp;on&nbsp;microcontrollers<br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
 <td class="singlecolumn">Methods defined here:<br>
-<dl><dt><a name="Thimble-__init__"><strong>__init__</strong></a>(self, default_content_type='text/plain', req_buffer_size=1024)</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
+<dl><dt><a name="Thimble-__init__"><strong>__init__</strong></a>(self, default_content_type='application/octet-stream', req_buffer_size=1024)</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
+
+<dl><dt>async <a name="Thimble-file_type"><strong>file_type</strong></a>(self, file_path)</dt><dd><span class="code">Return&nbsp;a&nbsp;standard&nbsp;media&nbsp;type&nbsp;/&nbsp;subtype&nbsp;based&nbsp;on&nbsp;file&nbsp;extension<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;file_path&nbsp;(string):&nbsp;file&nbsp;name&nbsp;or&nbsp;full&nbsp;path<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;string:&nbsp;media&nbsp;type&nbsp;as&nbsp;registered&nbsp;with&nbsp;the&nbsp;Internet&nbsp;Assigned&nbsp;Numbers&nbsp;Authority&nbsp;(IANA)</span></dd></dl>
 
 <dl><dt>async <a name="Thimble-on_connect"><strong>on_connect</strong></a>(self, reader, writer)</dt><dd><span class="code">Connection&nbsp;handler&nbsp;for&nbsp;new&nbsp;client&nbsp;requests.<br>
 &nbsp;<br>
@@ -68,11 +76,40 @@ Returns:<br>
 Args:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;host&nbsp;(string):&nbsp;the&nbsp;IP&nbsp;address&nbsp;of&nbsp;the&nbsp;interface&nbsp;on&nbsp;which&nbsp;to&nbsp;listen<br>
 &nbsp;&nbsp;&nbsp;&nbsp;port&nbsp;(int):&nbsp;the&nbsp;TCP&nbsp;port&nbsp;on&nbsp;which&nbsp;to&nbsp;listen<br>
-&nbsp;&nbsp;&nbsp;&nbsp;loop&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;a&nbsp;uasyncio&nbsp;loop&nbsp;that&nbsp;the&nbsp;server&nbsp;should&nbsp;insert&nbsp;itself&nbsp;into<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loop&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;asyncio&nbsp;loop&nbsp;that&nbsp;the&nbsp;server&nbsp;should&nbsp;insert&nbsp;itself&nbsp;into<br>
 &nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;(boolean):&nbsp;a&nbsp;flag&nbsp;to&nbsp;indicate&nbsp;verbose&nbsp;logging&nbsp;is&nbsp;desired<br>
 &nbsp;<br>
 Returns:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="builtins.html#object">object</a>:&nbsp;the&nbsp;same&nbsp;loop&nbsp;<a href="builtins.html#object">object</a>&nbsp;given&nbsp;as&nbsp;a&nbsp;parameter&nbsp;or&nbsp;a&nbsp;new&nbsp;one&nbsp;if&nbsp;no&nbsp;existing&nbsp;loop&nbsp;was&nbsp;passed</span></dd></dl>
+
+<dl><dt>async <a name="Thimble-send_error"><strong>send_error</strong></a>(self, error_number, writer)</dt><dd><span class="code">Given&nbsp;a&nbsp;stream&nbsp;and&nbsp;an&nbsp;HTTP&nbsp;error&nbsp;number,&nbsp;send&nbsp;a&nbsp;friendly&nbsp;text&nbsp;error&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;error_number&nbsp;(integer):&nbsp;HTTP&nbsp;status&nbsp;code<br>
+&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;asyncio&nbsp;Stream&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;file&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
+
+<dl><dt>async <a name="Thimble-send_file_contents"><strong>send_file_contents</strong></a>(self, file_path, writer)</dt><dd><span class="code">Given&nbsp;a&nbsp;file&nbsp;path&nbsp;and&nbsp;an&nbsp;output&nbsp;stream,&nbsp;send&nbsp;HTTP&nbsp;status,&nbsp;headers,&nbsp;and&nbsp;file&nbsp;contents&nbsp;as&nbsp;body<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;file_path&nbsp;(string):&nbsp;fully-qualified&nbsp;path&nbsp;to&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;asyncio&nbsp;Stream&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;file&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
+
+<dl><dt>async <a name="Thimble-send_function_results"><strong>send_function_results</strong></a>(self, func, req, url_wildcard, writer)</dt><dd><span class="code">Execute&nbsp;the&nbsp;given&nbsp;function&nbsp;with&nbsp;the&nbsp;HTTP&nbsp;reqest&nbsp;parameters&nbsp;as&nbsp;an&nbsp;argument&nbsp;and&nbsp;send&nbsp;the&nbsp;results&nbsp;as&nbsp;an&nbsp;HTTP&nbsp;reply<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;func&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;reference&nbsp;to&nbsp;the&nbsp;function&nbsp;to&nbsp;be&nbsp;executed&nbsp;or&nbsp;a&nbsp;tuple&nbsp;of&nbsp;function&nbsp;and&nbsp;URL&nbsp;wildcard<br>
+&nbsp;&nbsp;&nbsp;&nbsp;req&nbsp;(dictionary):&nbsp;HTTP&nbsp;request&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;url_wildcard&nbsp;(various&nbsp;types):&nbsp;regex-matched&nbsp;portion&nbsp;of&nbsp;the&nbsp;url_path&nbsp;(or&nbsp;None&nbsp;for&nbsp;non-regex&nbsp;routes)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;asyncio&nbsp;Stream&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;results&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
 
 <hr>
 Static methods defined here:<br>
@@ -84,15 +121,7 @@ Args:<br>
 Returns:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;size&nbsp;in&nbsp;bytes&nbsp;or&nbsp;None&nbsp;if&nbsp;there&nbsp;was&nbsp;a&nbsp;problem&nbsp;obtaining&nbsp;the&nbsp;size&nbsp;(e.g.&nbsp;file&nbsp;does&nbsp;not&nbsp;exist)</span></dd></dl>
 
-<dl><dt>async <a name="Thimble-file_type"><strong>file_type</strong></a>(file_path)</dt><dd><span class="code">Return&nbsp;a&nbsp;standard&nbsp;media&nbsp;type&nbsp;/&nbsp;subtype&nbsp;based&nbsp;on&nbsp;file&nbsp;extension<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;file_path&nbsp;(string):&nbsp;file&nbsp;name&nbsp;or&nbsp;full&nbsp;path<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;string:&nbsp;media&nbsp;type&nbsp;as&nbsp;registered&nbsp;with&nbsp;the&nbsp;Internet&nbsp;Assigned&nbsp;Numbers&nbsp;Authority&nbsp;(IANA)</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-http_headers"><strong>http_headers</strong></a>(content_length=0, content_type='text/plain', content_encoding='')</dt><dd><span class="code">Generate&nbsp;appropriate&nbsp;HTTP&nbsp;response&nbsp;headers&nbsp;based&nbsp;on&nbsp;content&nbsp;properties<br>
+<dl><dt>async <a name="Thimble-http_headers"><strong>http_headers</strong></a>(content_length=0, content_type='', content_encoding='')</dt><dd><span class="code">Generate&nbsp;appropriate&nbsp;HTTP&nbsp;response&nbsp;headers&nbsp;based&nbsp;on&nbsp;content&nbsp;properties<br>
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;content_length&nbsp;(int):&nbsp;length&nbsp;of&nbsp;body,&nbsp;used&nbsp;for&nbsp;Content-Length&nbsp;header<br>
@@ -145,26 +174,6 @@ Args:<br>
 &nbsp;<br>
 Returns:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;bytes:&nbsp;a&nbsp;chunk&nbsp;of&nbsp;the&nbsp;file&nbsp;until&nbsp;the&nbsp;file&nbsp;ends,&nbsp;then&nbsp;nothing</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-send_file_contents"><strong>send_file_contents</strong></a>(file_path, writer)</dt><dd><span class="code">Given&nbsp;a&nbsp;file&nbsp;path&nbsp;and&nbsp;an&nbsp;output&nbsp;stream,&nbsp;send&nbsp;HTTP&nbsp;status,&nbsp;headers,&nbsp;and&nbsp;file&nbsp;contents&nbsp;as&nbsp;body<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;file_path&nbsp;(string):&nbsp;fully-qualified&nbsp;path&nbsp;to&nbsp;file<br>
-&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;uasyncio&nbsp;Stream&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;file&nbsp;should&nbsp;be&nbsp;sent<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
-
-<dl><dt>async <a name="Thimble-send_function_results"><strong>send_function_results</strong></a>(func, req, url_wildcard, writer)</dt><dd><span class="code">Execute&nbsp;the&nbsp;given&nbsp;function&nbsp;with&nbsp;the&nbsp;HTTP&nbsp;reqest&nbsp;parameters&nbsp;as&nbsp;an&nbsp;argument&nbsp;and&nbsp;send&nbsp;the&nbsp;results&nbsp;as&nbsp;an&nbsp;HTTP&nbsp;reply<br>
-&nbsp;<br>
-Args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;func&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;reference&nbsp;to&nbsp;the&nbsp;function&nbsp;to&nbsp;be&nbsp;executed&nbsp;or&nbsp;a&nbsp;tuple&nbsp;of&nbsp;function&nbsp;and&nbsp;URL&nbsp;wildcard<br>
-&nbsp;&nbsp;&nbsp;&nbsp;req&nbsp;(dictionary):&nbsp;HTTP&nbsp;request&nbsp;parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;url_wildcard&nbsp;(various&nbsp;types):&nbsp;regex-matched&nbsp;portion&nbsp;of&nbsp;the&nbsp;url_path&nbsp;(or&nbsp;None&nbsp;for&nbsp;non-regex&nbsp;routes)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;writer&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;the&nbsp;uasyncio&nbsp;Stream&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;which&nbsp;the&nbsp;results&nbsp;should&nbsp;be&nbsp;sent<br>
-&nbsp;<br>
-Returns:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;nothing</span></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>

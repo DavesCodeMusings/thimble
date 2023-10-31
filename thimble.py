@@ -408,8 +408,7 @@ class Thimble:
                 await self.send_function_results(route_value, req, None, writer)
             else:  # nothing returned, try delivering static content instead
                 file_path = self.static_folder + req['path']
-                if (file_path.endswith('/')):
-                    # requests for '/path/to' become '/path/to/index.html'
+                if (file_path.endswith('/')):  # '/path/to/' becomes '/path/to/index.html'
                     file_path = file_path + self.directory_index
                 await self.send_file_contents(file_path, writer)
 

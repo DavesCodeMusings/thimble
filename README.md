@@ -98,9 +98,7 @@ Using the example main.py assumes that networking is already configured by a boo
 Thimble is in the early phases of development and may have a few bugs lurking. If you find one, add a Github issue and I'll see if I can fix it.
 
 ## Will it run on Microcontroller X?
-Code is being developed and tested using a Wemos D1 Mini (ESP8266, 4M Flash) clone with MicroPython 1.19.1. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) clone. It may or may not work with other devices.
-
-UPDATE: Most testing these days is on an ESP32-C3.
+Code is being developed and tested using an ESP32-C3 devkit with MicroPython 1.21. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) clone. It may or may not work with other devices.
 
 ## How do I install it?
 Using mpremote on Windows, do this:

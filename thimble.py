@@ -95,7 +95,7 @@ class Thimble:
                 break
             else:
                 name, value = req_buffer_lines[i].split(':', 1)
-                req['headers'][name.strip()] = value.strip()
+                req['headers'][name.strip().lower()] = value.strip()
 
         # Last line is the body (or blank if no body.)
         req['body'] = req_buffer_lines[len(req_buffer_lines) - 1]

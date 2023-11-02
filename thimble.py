@@ -289,9 +289,12 @@ class Thimble:
             else:  # empty chunk means end of the file
                 return
 
-    async def send_file_contents(self, file_path, writer):
+    async def send_file_contents(self, file_path, req, writer):
         """
-        Given a file path and an output stream, send HTTP status, headers, and file contents as body
+        Given a file path and an output stream, send HTTP status, headers, and file contents as body.
+        If client accepts gzip encoding, and a file of the same name with a .gzip extension appended
+        exists, the gzipped version will be sent. This is not so much for speeding up transfer as it
+        for conserving limited flash filesystem space.
 
         Args:
             file_path (string): fully-qualified path to file
@@ -300,21 +303,22 @@ class Thimble:
         Returns:
             nothing
         """
-        file_type = await self.file_type(file_path)
-        file_size = await Thimble.file_size(file_path)
+        # file_size is also used as an indicator of the file's existence
         file_gzip_size = await Thimble.file_size(file_path + '.gzip')
+        file_size = await Thimble.file_size(file_path)
+        file_type = await self.file_type(file_path)
 
-        if file_size != None:  # a non-compressed file was found
-            writer.write(await Thimble.http_status_line(200))
-            writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
-            with open(file_path, 'rb') as file:
-                for chunk in Thimble.read_file_chunk(file):
-                    writer.write(chunk)
-                    await writer.drain()  # drain immediately after write to avoid memory allocation errors
-        elif file_gzip_size != None:  # a compressed file was found
+        if file_gzip_size != None and 'accept-encoding' in req['headers'] and 'gzip' in req['headers']['accept-encoding'].lower():
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding='gzip'))
             with open(file_path + '.gzip', 'rb') as file:
+                for chunk in Thimble.read_file_chunk(file):
+                    writer.write(chunk)
+                    await writer.drain()  # drain immediately after write to avoid memory allocation errors
+        elif file_size != None:  # a non-compressed file was found
+            writer.write(await Thimble.http_status_line(200))
+            writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
+            with open(file_path, 'rb') as file:
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()
@@ -410,7 +414,7 @@ class Thimble:
                 file_path = self.static_folder + req['path']
                 if (file_path.endswith('/')):  # '/path/to/' becomes '/path/to/index.html'
                     file_path = file_path + self.directory_index
-                await self.send_file_contents(file_path, writer)
+                await self.send_file_contents(file_path, req, writer)
 
         await writer.drain()
         writer.close()

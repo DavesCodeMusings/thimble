@@ -165,9 +165,9 @@ class Thimble:
         Returns:
             boolean: True if the function was defined as asynchronous, False if not, and None if unknown
         """
-        if type(func) == type(Thimble.on_connect):
+        if type(func) == type(Thimble.on_connect):  # noqa: E721
             return True  # It's an async function
-        elif type(func) == type(Thimble.run):
+        elif type(func) == type(Thimble.run):  # noqa: E721
             return False  # It's a regular function
         else:
             return None  # It's not a function

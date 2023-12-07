@@ -1,6 +1,6 @@
 {
   "urls": [
-    ["thimble.py", "github:DavesCodeMusings/thimble/thimble.py"]
+    ["thimble.mpy", "github:DavesCodeMusings/thimble/thimble.mpy"]
   ],
-  "version": "0.6.1"
+  "version": "0.7.0"
 }

@@ -1,0 +1,26 @@
+name: Lint and compile bytecode
+on: push
+env:
+  SRC_FILE: thimble.py
+permissions:
+  contents: write
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: Install ruff and mpy-cross
+        run: pip3 install mpy-cross ruff
+      - name: Check lint and format
+        run: python3 -m ruff check $SRC_FILE
+      - name: Compile bytecode
+        run: python3 -m mpy_cross $SRC_FILE
+      - name: Commit changes
+        run: |
+          if [ $(git diff | wc -l) -gt 0 ]; then
+            git config --global user.name 'DavesCodeMusings'
+            git config --global user.email 'DavesCodeMusings@users.noreply.github.com'
+            git commit -am "mpy_cross $SRC_FILE"
+            git push
+          fi

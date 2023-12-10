@@ -204,12 +204,12 @@ class Thimble:
         """
         try:
             if Thimble.is_async(func) is True:  # await the async function
-                if url_wildcard is None:
+                if url_wildcard is not None:
                     func_result = await func(req, url_wildcard)
                 else:
                     func_result = await func(req)
             else:  # no awaiting required for non-async
-                if url_wildcard is None:
+                if url_wildcard is not None:
                     func_result = func(req, url_wildcard)
                 else:
                     func_result = func(req)
@@ -308,14 +308,14 @@ class Thimble:
         file_size = await Thimble.file_size(file_path)
         file_type = await self.file_type(file_path)
 
-        if file_gzip_size is None and 'accept-encoding' in req['headers'] and 'gzip' in req['headers']['accept-encoding'].lower():
+        if file_gzip_size is not None and 'accept-encoding' in req['headers'] and 'gzip' in req['headers']['accept-encoding'].lower():
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding='gzip'))
             with open(file_path + '.gzip', 'rb') as file:
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()  # drain immediately after write to avoid memory allocation errors
-        elif file_size is None:  # a non-compressed file was found
+        elif file_size is not None:  # a non-compressed file was found
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
             with open(file_path, 'rb') as file:

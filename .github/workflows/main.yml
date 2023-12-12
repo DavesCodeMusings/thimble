@@ -10,13 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-      - name: Install ruff and mpy-cross
-        run: pip3 install mpy-cross ruff
-      - name: Check lint and format
-        run: python3 -m ruff check $SRC_FILE
-      - name: Compile bytecode
-        run: python3 -m mpy_cross $SRC_FILE
-      - name: Commit changes
+      - name: Linting...
+        run: |
+          pip3 install ruff
+          python3 -m ruff check $SRC_FILE
+      - name: Compiling bytecode...
+        run: |
+          pip3 install mpy-cross
+          python3 -m mpy_cross $SRC_FILE
+      - name: Committing changes...
         run: |
           if [ $(git diff | wc -l) -gt 0 ]; then
             git config --global user.name "$GITHUB_REPOSITORY_OWNER"

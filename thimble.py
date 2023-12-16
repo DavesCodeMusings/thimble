@@ -283,7 +283,7 @@ class Thimble:
             bytes: a chunk of the file until the file ends, then nothing
         """
         while True:
-            chunk = file.read(64)  # small chunks to avoid out of memory errors
+            chunk = file.read(512)  # small chunks to avoid out of memory errors
             if chunk:
                 yield chunk
             else:  # empty chunk means end of the file

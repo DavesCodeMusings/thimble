@@ -27,6 +27,6 @@ jobs:
           if [ $(git diff | wc -l) -gt 0 ]; then
             git config --global user.name "$GITHUB_REPOSITORY_OWNER"
             git config --global user.email "$GITHUB_REPOSITORY_OWNER@users.noreply.github.com"
-            git commit -am "mpy_cross $SRC_FILE"
+            git commit -am "GitHub Actions"
             git push
           fi

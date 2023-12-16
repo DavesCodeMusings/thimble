@@ -21,7 +21,7 @@ jobs:
       - name: Creating class doc...
         run: |
           pip3 install pdoc3
-          pdoc3 --force --html --output-dir=docs thimble.py
+          pdoc3 --force --html --output-dir=docs $SRC_FILE
       - name: Committing changes...
         run: |
           if [ $(git diff | wc -l) -gt 0 ]; then

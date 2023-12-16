@@ -18,6 +18,10 @@ jobs:
         run: |
           pip3 install mpy-cross
           python3 -m mpy_cross $SRC_FILE
+      - name: Creating class doc...
+        run: |
+          pip3 install pdoc3
+          pdoc3 --force --html --output-dir=docs thimble.py
       - name: Committing changes...
         run: |
           if [ $(git diff | wc -l) -gt 0 ]; then

@@ -77,7 +77,7 @@ class Thimble:
         query = {}
         query_params = query_string.split(&#39;&amp;&#39;)
         for param in query_params:
-            if (not &#39;=&#39; in param):  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
+            if &#39;=&#39; not in param:  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
                 key = param
                 query[key] = &#39;&#39;
             else:
@@ -110,7 +110,7 @@ class Thimble:
 
         req[&#39;method&#39;], target, req[&#39;http_version&#39;] = req_buffer_lines[0].split(
             &#39; &#39;, 2)  # Example: GET /route/path HTTP/1.1
-        if (not &#39;?&#39; in target):
+        if &#39;?&#39; not in target:
             req[&#39;path&#39;] = target
         else:  # target can have a query component, so /route/path could be something like /route/path?state=on&amp;timeout=30
             req[&#39;path&#39;], query_string = target.split(&#39;?&#39;, 1)
@@ -119,7 +119,7 @@ class Thimble:
         req[&#39;headers&#39;] = {}
         for i in range(1, len(req_buffer_lines) - 1):
             # Blank line signifies the end of headers.
-            if (req_buffer_lines[i] == &#39;&#39;):
+            if req_buffer_lines[i] == &#39;&#39;:
                 break
             else:
                 name, value = req_buffer_lines[i].split(&#39;:&#39;, 1)
@@ -149,7 +149,7 @@ class Thimble:
             500: &#34;500 Internal Server Error&#34;
         }
 
-        if (status_code == None or status_code not in http_status_message):
+        if status_code is None or status_code not in http_status_message:
             status_code = 500
 
         return f&#39;HTTP/1.1 {http_status_message[status_code]}\r\n&#39;
@@ -193,9 +193,9 @@ class Thimble:
         Returns:
             boolean: True if the function was defined as asynchronous, False if not, and None if unknown
         &#34;&#34;&#34;
-        if (type(func) == type(Thimble.on_connect)):
+        if type(func) == type(Thimble.on_connect):  # noqa: E721
             return True  # It&#39;s an async function
-        elif (type(func) == type(Thimble.run)):
+        elif type(func) == type(Thimble.run):  # noqa: E721
             return False  # It&#39;s a regular function
         else:
             return None  # It&#39;s not a function
@@ -231,13 +231,13 @@ class Thimble:
             nothing
         &#34;&#34;&#34;
         try:
-            if (Thimble.is_async(func) == True):  # await the async function
-                if (url_wildcard != None):
+            if Thimble.is_async(func) is True:  # await the async function
+                if url_wildcard is not None:
                     func_result = await func(req, url_wildcard)
                 else:
                     func_result = await func(req)
             else:  # no awaiting required for non-async
-                if (url_wildcard != None):
+                if url_wildcard is not None:
                     func_result = func(req, url_wildcard)
                 else:
                     func_result = func(req)
@@ -246,9 +246,9 @@ class Thimble:
             await self.send_error(500, writer)
             print(f&#39;Function call failed: {ex}&#39;)
         else:
-            if (isinstance(func_result, tuple) and len(func_result) == 3):
+            if isinstance(func_result, tuple) and len(func_result) == 3:
                 body, status_code, content_type = func_result
-            elif (isinstance(func_result, tuple) and len(func_result) == 2):
+            elif isinstance(func_result, tuple) and len(func_result) == 2:
                 body, status_code = func_result
                 content_type = &#39;text/plain&#39;
             else:
@@ -256,7 +256,7 @@ class Thimble:
                 status_code = 200
                 content_type = &#39;text/plain&#39;
 
-            if (not isinstance(body, str)):
+            if not isinstance(body, str):
                 body = str(body)
             writer.write(await Thimble.http_status_line(status_code))
             writer.write(await Thimble.http_headers(content_length=len(body), content_type=content_type))
@@ -278,7 +278,7 @@ class Thimble:
 
         try:
             size = stat(file_path)[6]
-        except Exception as ex:
+        except OSError:
             size = None
 
         return size
@@ -294,7 +294,7 @@ class Thimble:
             string: media type as registered with the Internet Assigned Numbers Authority (IANA)
         &#34;&#34;&#34;
         file_ext = file_path.split(&#39;.&#39;)[-1]
-        if (file_ext not in self.media_types):
+        if file_ext not in self.media_types:
             return self.default_content_type
         else:
             return self.media_types[file_ext]
@@ -336,14 +336,14 @@ class Thimble:
         file_size = await Thimble.file_size(file_path)
         file_type = await self.file_type(file_path)
 
-        if file_gzip_size != None and &#39;accept-encoding&#39; in req[&#39;headers&#39;] and &#39;gzip&#39; in req[&#39;headers&#39;][&#39;accept-encoding&#39;].lower():
+        if file_gzip_size is not None and &#39;accept-encoding&#39; in req[&#39;headers&#39;] and &#39;gzip&#39; in req[&#39;headers&#39;][&#39;accept-encoding&#39;].lower():
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding=&#39;gzip&#39;))
             with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()  # drain immediately after write to avoid memory allocation errors
-        elif file_size != None:  # a non-compressed file was found
+        elif file_size is not None:  # a non-compressed file was found
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
             with open(file_path, &#39;rb&#39;) as file:
@@ -373,7 +373,7 @@ class Thimble:
         }
 
         regex_match = search(&#39;(&lt;.*&gt;)&#39;, url_path)
-        if (regex_match):
+        if regex_match:
             url_path = url_path.replace(regex_match.group(
                 1), regex_macros[regex_match.group(1)])
 
@@ -395,15 +395,15 @@ class Thimble:
             object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
         &#34;&#34;&#34;
         result = None
-        if (route_pattern in self.routes):  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
+        if route_pattern in self.routes:  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
             result = self.routes[route_pattern]
         else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
             for key in self.routes.keys():
                 regex_match = match(key, route_pattern)
-                if (regex_match):
+                if regex_match:
                     func = self.routes[key]
                     wildcard_value = regex_match.group(1)
-                    if (self.debug):
+                    if self.debug:
                         print(f&#39;Wildcard match: {wildcard_value}&#39;)
                     result = func, wildcard_value
 
@@ -421,26 +421,26 @@ class Thimble:
             nothing
         &#34;&#34;&#34;
         client_ip = writer.get_extra_info(&#39;peername&#39;)[0]
-        if (self.debug):
+        if self.debug:
             print(f&#39;Connection from client: {client_ip}&#39;)
 
         try:
             req_buffer = await reader.read(self.req_buffer_size)
             req = await Thimble.parse_http_request(req_buffer)
-            if (self.debug):
+            if self.debug:
                 print(f&#39;Request: {req}&#39;)
         except Exception as ex:
             await self.send_error(400, writer)
             print(f&#39;Unable to parse request: {ex}&#39;)
         else:
             route_value = self.resolve_route(req[&#39;method&#39;] + req[&#39;path&#39;])
-            if (isinstance(route_value, tuple)):  # a function and URL wildcard value were returned
+            if isinstance(route_value, tuple):  # a function and URL wildcard value were returned
                 await self.send_function_results(route_value[0], req, route_value[1], writer)
-            elif (route_value != None):  # just a function was returned
+            elif route_value is None:  # just a function was returned
                 await self.send_function_results(route_value, req, None, writer)
             else:  # nothing returned, try delivering static content instead
                 file_path = self.static_folder + req[&#39;path&#39;]
-                if (file_path.endswith(&#39;/&#39;)):  # &#39;/path/to/&#39; becomes &#39;/path/to/index.html&#39;
+                if file_path.endswith(&#39;/&#39;):  # &#39;/path/to/&#39; becomes &#39;/path/to/index.html&#39;
                     file_path = file_path + self.directory_index
                 await self.send_file_contents(file_path, req, writer)
 
@@ -449,7 +449,7 @@ class Thimble:
         await writer.wait_closed()
         reader.close()
         await reader.wait_closed()
-        if (self.debug):
+        if self.debug:
             print(f&#39;Connection closed for {client_ip}&#39;)
 
     def run(self, host=&#39;0.0.0.0&#39;, port=80, loop=None, debug=False):
@@ -468,7 +468,7 @@ class Thimble:
         self.debug = debug
         print(f&#39;Listening on {host}:{port}&#39;)
 
-        if (loop == None):
+        if loop is None:
             loop = get_event_loop()
             server = start_server(self.on_connect, host, port, 5)
             loop.create_task(server)
@@ -546,7 +546,7 @@ class Thimble:
         query = {}
         query_params = query_string.split(&#39;&amp;&#39;)
         for param in query_params:
-            if (not &#39;=&#39; in param):  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
+            if &#39;=&#39; not in param:  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
                 key = param
                 query[key] = &#39;&#39;
             else:
@@ -579,7 +579,7 @@ class Thimble:
 
         req[&#39;method&#39;], target, req[&#39;http_version&#39;] = req_buffer_lines[0].split(
             &#39; &#39;, 2)  # Example: GET /route/path HTTP/1.1
-        if (not &#39;?&#39; in target):
+        if &#39;?&#39; not in target:
             req[&#39;path&#39;] = target
         else:  # target can have a query component, so /route/path could be something like /route/path?state=on&amp;timeout=30
             req[&#39;path&#39;], query_string = target.split(&#39;?&#39;, 1)
@@ -588,7 +588,7 @@ class Thimble:
         req[&#39;headers&#39;] = {}
         for i in range(1, len(req_buffer_lines) - 1):
             # Blank line signifies the end of headers.
-            if (req_buffer_lines[i] == &#39;&#39;):
+            if req_buffer_lines[i] == &#39;&#39;:
                 break
             else:
                 name, value = req_buffer_lines[i].split(&#39;:&#39;, 1)
@@ -618,7 +618,7 @@ class Thimble:
             500: &#34;500 Internal Server Error&#34;
         }
 
-        if (status_code == None or status_code not in http_status_message):
+        if status_code is None or status_code not in http_status_message:
             status_code = 500
 
         return f&#39;HTTP/1.1 {http_status_message[status_code]}\r\n&#39;
@@ -662,9 +662,9 @@ class Thimble:
         Returns:
             boolean: True if the function was defined as asynchronous, False if not, and None if unknown
         &#34;&#34;&#34;
-        if (type(func) == type(Thimble.on_connect)):
+        if type(func) == type(Thimble.on_connect):  # noqa: E721
             return True  # It&#39;s an async function
-        elif (type(func) == type(Thimble.run)):
+        elif type(func) == type(Thimble.run):  # noqa: E721
             return False  # It&#39;s a regular function
         else:
             return None  # It&#39;s not a function
@@ -700,13 +700,13 @@ class Thimble:
             nothing
         &#34;&#34;&#34;
         try:
-            if (Thimble.is_async(func) == True):  # await the async function
-                if (url_wildcard != None):
+            if Thimble.is_async(func) is True:  # await the async function
+                if url_wildcard is not None:
                     func_result = await func(req, url_wildcard)
                 else:
                     func_result = await func(req)
             else:  # no awaiting required for non-async
-                if (url_wildcard != None):
+                if url_wildcard is not None:
                     func_result = func(req, url_wildcard)
                 else:
                     func_result = func(req)
@@ -715,9 +715,9 @@ class Thimble:
             await self.send_error(500, writer)
             print(f&#39;Function call failed: {ex}&#39;)
         else:
-            if (isinstance(func_result, tuple) and len(func_result) == 3):
+            if isinstance(func_result, tuple) and len(func_result) == 3:
                 body, status_code, content_type = func_result
-            elif (isinstance(func_result, tuple) and len(func_result) == 2):
+            elif isinstance(func_result, tuple) and len(func_result) == 2:
                 body, status_code = func_result
                 content_type = &#39;text/plain&#39;
             else:
@@ -725,7 +725,7 @@ class Thimble:
                 status_code = 200
                 content_type = &#39;text/plain&#39;
 
-            if (not isinstance(body, str)):
+            if not isinstance(body, str):
                 body = str(body)
             writer.write(await Thimble.http_status_line(status_code))
             writer.write(await Thimble.http_headers(content_length=len(body), content_type=content_type))
@@ -747,7 +747,7 @@ class Thimble:
 
         try:
             size = stat(file_path)[6]
-        except Exception as ex:
+        except OSError:
             size = None
 
         return size
@@ -763,7 +763,7 @@ class Thimble:
             string: media type as registered with the Internet Assigned Numbers Authority (IANA)
         &#34;&#34;&#34;
         file_ext = file_path.split(&#39;.&#39;)[-1]
-        if (file_ext not in self.media_types):
+        if file_ext not in self.media_types:
             return self.default_content_type
         else:
             return self.media_types[file_ext]
@@ -805,14 +805,14 @@ class Thimble:
         file_size = await Thimble.file_size(file_path)
         file_type = await self.file_type(file_path)
 
-        if file_gzip_size != None and &#39;accept-encoding&#39; in req[&#39;headers&#39;] and &#39;gzip&#39; in req[&#39;headers&#39;][&#39;accept-encoding&#39;].lower():
+        if file_gzip_size is not None and &#39;accept-encoding&#39; in req[&#39;headers&#39;] and &#39;gzip&#39; in req[&#39;headers&#39;][&#39;accept-encoding&#39;].lower():
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding=&#39;gzip&#39;))
             with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()  # drain immediately after write to avoid memory allocation errors
-        elif file_size != None:  # a non-compressed file was found
+        elif file_size is not None:  # a non-compressed file was found
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
             with open(file_path, &#39;rb&#39;) as file:
@@ -842,7 +842,7 @@ class Thimble:
         }
 
         regex_match = search(&#39;(&lt;.*&gt;)&#39;, url_path)
-        if (regex_match):
+        if regex_match:
             url_path = url_path.replace(regex_match.group(
                 1), regex_macros[regex_match.group(1)])
 
@@ -864,15 +864,15 @@ class Thimble:
             object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
         &#34;&#34;&#34;
         result = None
-        if (route_pattern in self.routes):  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
+        if route_pattern in self.routes:  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
             result = self.routes[route_pattern]
         else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
             for key in self.routes.keys():
                 regex_match = match(key, route_pattern)
-                if (regex_match):
+                if regex_match:
                     func = self.routes[key]
                     wildcard_value = regex_match.group(1)
-                    if (self.debug):
+                    if self.debug:
                         print(f&#39;Wildcard match: {wildcard_value}&#39;)
                     result = func, wildcard_value
 
@@ -890,26 +890,26 @@ class Thimble:
             nothing
         &#34;&#34;&#34;
         client_ip = writer.get_extra_info(&#39;peername&#39;)[0]
-        if (self.debug):
+        if self.debug:
             print(f&#39;Connection from client: {client_ip}&#39;)
 
         try:
             req_buffer = await reader.read(self.req_buffer_size)
             req = await Thimble.parse_http_request(req_buffer)
-            if (self.debug):
+            if self.debug:
                 print(f&#39;Request: {req}&#39;)
         except Exception as ex:
             await self.send_error(400, writer)
             print(f&#39;Unable to parse request: {ex}&#39;)
         else:
             route_value = self.resolve_route(req[&#39;method&#39;] + req[&#39;path&#39;])
-            if (isinstance(route_value, tuple)):  # a function and URL wildcard value were returned
+            if isinstance(route_value, tuple):  # a function and URL wildcard value were returned
                 await self.send_function_results(route_value[0], req, route_value[1], writer)
-            elif (route_value != None):  # just a function was returned
+            elif route_value is None:  # just a function was returned
                 await self.send_function_results(route_value, req, None, writer)
             else:  # nothing returned, try delivering static content instead
                 file_path = self.static_folder + req[&#39;path&#39;]
-                if (file_path.endswith(&#39;/&#39;)):  # &#39;/path/to/&#39; becomes &#39;/path/to/index.html&#39;
+                if file_path.endswith(&#39;/&#39;):  # &#39;/path/to/&#39; becomes &#39;/path/to/index.html&#39;
                     file_path = file_path + self.directory_index
                 await self.send_file_contents(file_path, req, writer)
 
@@ -918,7 +918,7 @@ class Thimble:
         await writer.wait_closed()
         reader.close()
         await reader.wait_closed()
-        if (self.debug):
+        if self.debug:
             print(f&#39;Connection closed for {client_ip}&#39;)
 
     def run(self, host=&#39;0.0.0.0&#39;, port=80, loop=None, debug=False):
@@ -937,7 +937,7 @@ class Thimble:
         self.debug = debug
         print(f&#39;Listening on {host}:{port}&#39;)
 
-        if (loop == None):
+        if loop is None:
             loop = get_event_loop()
             server = start_server(self.on_connect, host, port, 5)
             loop.create_task(server)
@@ -987,7 +987,7 @@ async def file_size(file_path):
 
     try:
         size = stat(file_path)[6]
-    except Exception as ex:
+    except OSError:
         size = None
 
     return size</code></pre>
@@ -1078,7 +1078,7 @@ async def http_status_line(status_code):
         500: &#34;500 Internal Server Error&#34;
     }
 
-    if (status_code == None or status_code not in http_status_message):
+    if status_code is None or status_code not in http_status_message:
         status_code = 500
 
     return f&#39;HTTP/1.1 {http_status_message[status_code]}\r\n&#39;</code></pre>
@@ -1114,9 +1114,9 @@ def is_async(func):
     Returns:
         boolean: True if the function was defined as asynchronous, False if not, and None if unknown
     &#34;&#34;&#34;
-    if (type(func) == type(Thimble.on_connect)):
+    if type(func) == type(Thimble.on_connect):  # noqa: E721
         return True  # It&#39;s an async function
-    elif (type(func) == type(Thimble.run)):
+    elif type(func) == type(Thimble.run):  # noqa: E721
         return False  # It&#39;s a regular function
     else:
         return None  # It&#39;s not a function</code></pre>
@@ -1171,7 +1171,7 @@ async def parse_http_request(req_buffer):
 
     req[&#39;method&#39;], target, req[&#39;http_version&#39;] = req_buffer_lines[0].split(
         &#39; &#39;, 2)  # Example: GET /route/path HTTP/1.1
-    if (not &#39;?&#39; in target):
+    if &#39;?&#39; not in target:
         req[&#39;path&#39;] = target
     else:  # target can have a query component, so /route/path could be something like /route/path?state=on&amp;timeout=30
         req[&#39;path&#39;], query_string = target.split(&#39;?&#39;, 1)
@@ -1180,7 +1180,7 @@ async def parse_http_request(req_buffer):
     req[&#39;headers&#39;] = {}
     for i in range(1, len(req_buffer_lines) - 1):
         # Blank line signifies the end of headers.
-        if (req_buffer_lines[i] == &#39;&#39;):
+        if req_buffer_lines[i] == &#39;&#39;:
             break
         else:
             name, value = req_buffer_lines[i].split(&#39;:&#39;, 1)
@@ -1226,7 +1226,7 @@ def parse_query_string(query_string):
     query = {}
     query_params = query_string.split(&#39;&amp;&#39;)
     for param in query_params:
-        if (not &#39;=&#39; in param):  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
+        if &#39;=&#39; not in param:  # A key with no value, like: &#39;red&#39; instead of &#39;color=red&#39;
             key = param
             query[key] = &#39;&#39;
         else:
@@ -1307,7 +1307,7 @@ def read_file_chunk(file):
         string: media type as registered with the Internet Assigned Numbers Authority (IANA)
     &#34;&#34;&#34;
     file_ext = file_path.split(&#39;.&#39;)[-1]
-    if (file_ext not in self.media_types):
+    if file_ext not in self.media_types:
         return self.default_content_type
     else:
         return self.media_types[file_ext]</code></pre>
@@ -1343,26 +1343,26 @@ def read_file_chunk(file):
         nothing
     &#34;&#34;&#34;
     client_ip = writer.get_extra_info(&#39;peername&#39;)[0]
-    if (self.debug):
+    if self.debug:
         print(f&#39;Connection from client: {client_ip}&#39;)
 
     try:
         req_buffer = await reader.read(self.req_buffer_size)
         req = await Thimble.parse_http_request(req_buffer)
-        if (self.debug):
+        if self.debug:
             print(f&#39;Request: {req}&#39;)
     except Exception as ex:
         await self.send_error(400, writer)
         print(f&#39;Unable to parse request: {ex}&#39;)
     else:
         route_value = self.resolve_route(req[&#39;method&#39;] + req[&#39;path&#39;])
-        if (isinstance(route_value, tuple)):  # a function and URL wildcard value were returned
+        if isinstance(route_value, tuple):  # a function and URL wildcard value were returned
             await self.send_function_results(route_value[0], req, route_value[1], writer)
-        elif (route_value != None):  # just a function was returned
+        elif route_value is None:  # just a function was returned
             await self.send_function_results(route_value, req, None, writer)
         else:  # nothing returned, try delivering static content instead
             file_path = self.static_folder + req[&#39;path&#39;]
-            if (file_path.endswith(&#39;/&#39;)):  # &#39;/path/to/&#39; becomes &#39;/path/to/index.html&#39;
+            if file_path.endswith(&#39;/&#39;):  # &#39;/path/to/&#39; becomes &#39;/path/to/index.html&#39;
                 file_path = file_path + self.directory_index
             await self.send_file_contents(file_path, req, writer)
 
@@ -1371,7 +1371,7 @@ def read_file_chunk(file):
     await writer.wait_closed()
     reader.close()
     await reader.wait_closed()
-    if (self.debug):
+    if self.debug:
         print(f&#39;Connection closed for {client_ip}&#39;)</code></pre>
 </details>
 </dd>
@@ -1405,15 +1405,15 @@ def read_file_chunk(file):
         object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
     &#34;&#34;&#34;
     result = None
-    if (route_pattern in self.routes):  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
+    if route_pattern in self.routes:  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
         result = self.routes[route_pattern]
     else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
         for key in self.routes.keys():
             regex_match = match(key, route_pattern)
-            if (regex_match):
+            if regex_match:
                 func = self.routes[key]
                 wildcard_value = regex_match.group(1)
-                if (self.debug):
+                if self.debug:
                     print(f&#39;Wildcard match: {wildcard_value}&#39;)
                 result = func, wildcard_value
 
@@ -1460,7 +1460,7 @@ def read_file_chunk(file):
     }
 
     regex_match = search(&#39;(&lt;.*&gt;)&#39;, url_path)
-    if (regex_match):
+    if regex_match:
         url_path = url_path.replace(regex_match.group(
             1), regex_macros[regex_match.group(1)])
 
@@ -1513,7 +1513,7 @@ def read_file_chunk(file):
     self.debug = debug
     print(f&#39;Listening on {host}:{port}&#39;)
 
-    if (loop == None):
+    if loop is None:
         loop = get_event_loop()
         server = start_server(self.on_connect, host, port, 5)
         loop.create_task(server)
@@ -1601,14 +1601,14 @@ for conserving limited flash filesystem space.</p>
     file_size = await Thimble.file_size(file_path)
     file_type = await self.file_type(file_path)
 
-    if file_gzip_size != None and &#39;accept-encoding&#39; in req[&#39;headers&#39;] and &#39;gzip&#39; in req[&#39;headers&#39;][&#39;accept-encoding&#39;].lower():
+    if file_gzip_size is not None and &#39;accept-encoding&#39; in req[&#39;headers&#39;] and &#39;gzip&#39; in req[&#39;headers&#39;][&#39;accept-encoding&#39;].lower():
         writer.write(await Thimble.http_status_line(200))
         writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding=&#39;gzip&#39;))
         with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:
             for chunk in Thimble.read_file_chunk(file):
                 writer.write(chunk)
                 await writer.drain()  # drain immediately after write to avoid memory allocation errors
-    elif file_size != None:  # a non-compressed file was found
+    elif file_size is not None:  # a non-compressed file was found
         writer.write(await Thimble.http_status_line(200))
         writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
         with open(file_path, &#39;rb&#39;) as file:
@@ -1656,13 +1656,13 @@ for conserving limited flash filesystem space.</p>
         nothing
     &#34;&#34;&#34;
     try:
-        if (Thimble.is_async(func) == True):  # await the async function
-            if (url_wildcard != None):
+        if Thimble.is_async(func) is True:  # await the async function
+            if url_wildcard is not None:
                 func_result = await func(req, url_wildcard)
             else:
                 func_result = await func(req)
         else:  # no awaiting required for non-async
-            if (url_wildcard != None):
+            if url_wildcard is not None:
                 func_result = func(req, url_wildcard)
             else:
                 func_result = func(req)
@@ -1671,9 +1671,9 @@ for conserving limited flash filesystem space.</p>
         await self.send_error(500, writer)
         print(f&#39;Function call failed: {ex}&#39;)
     else:
-        if (isinstance(func_result, tuple) and len(func_result) == 3):
+        if isinstance(func_result, tuple) and len(func_result) == 3:
             body, status_code, content_type = func_result
-        elif (isinstance(func_result, tuple) and len(func_result) == 2):
+        elif isinstance(func_result, tuple) and len(func_result) == 2:
             body, status_code = func_result
             content_type = &#39;text/plain&#39;
         else:
@@ -1681,7 +1681,7 @@ for conserving limited flash filesystem space.</p>
             status_code = 200
             content_type = &#39;text/plain&#39;
 
-        if (not isinstance(body, str)):
+        if not isinstance(body, str):
             body = str(body)
         writer.write(await Thimble.http_status_line(status_code))
         writer.write(await Thimble.http_headers(content_length=len(body), content_type=content_type))

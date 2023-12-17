@@ -25,7 +25,7 @@ app.run()
 
 Now, point your web browser to the IP of your device on the default port of 80 and you should see 'Hello World'.
 
-There are more complex examples in the [examples](https://github.com/DavesCodeMusings/timble/examples) subdirectory.
+There are more complex examples in the [examples](https://github.com/DavesCodeMusings/thimble/examples) subdirectory.
 
 See [the wiki](https://github.com/DavesCodeMusings/thimble/wiki) for examples in a step by step tutorial format.
 

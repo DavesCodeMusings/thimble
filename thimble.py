@@ -408,7 +408,7 @@ class Thimble:
             route_value = self.resolve_route(req['method'] + req['path'])
             if isinstance(route_value, tuple):  # a function and URL wildcard value were returned
                 await self.send_function_results(route_value[0], req, route_value[1], writer)
-            elif route_value is None:  # just a function was returned
+            elif route_value is not None:  # just a function was returned
                 await self.send_function_results(route_value, req, None, writer)
             else:  # nothing returned, try delivering static content instead
                 file_path = self.static_folder + req['path']

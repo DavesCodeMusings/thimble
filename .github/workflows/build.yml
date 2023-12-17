@@ -1,4 +1,4 @@
-name: Lint, compile bytecode, and create doc
+name: Build
 on: push
 env:
   SRC_FILE: thimble.py

@@ -25,69 +25,9 @@ app.run()
 
 Now, point your web browser to the IP of your device on the default port of 80 and you should see 'Hello World'.
 
-Beyond Hello World, here's a more useful example of exposing a GPIO pin via a REST API.
+There are more complex examples in the [examples](https://github.com/DavesCodeMusings/timble/examples) subdirectory.
 
-```py
-from machine import Pin
-from thimble import Thimble
-
-gpio_2 = Pin(2, Pin.OUT)
-
-app = Thimble()
-
-@app.route('/gpio/2', methods=['GET'])
-def get_gpio_2(req):
-    return gpio_2.value()
-
-@app.route('/gpio/2', methods=['PUT'])
-def set_gpio_2(req):
-    if (req['body'] == '1' or req['body'] == 'on'):
-        gpio_2.on()
-    elif (req['body'] == '0' or req['body'] == 'off'):
-        gpio_2.off()
-    return gpio_2.value()
-
-app.run(debug=True)
-```
-
-Saving the code above as main.py will let you read the state of GPIO 2 using a GET method and the URL path of /gpio/2. The same path with a PUT method and `on` or `off` in the request body will change the state of GPIO 2.
-
-Try it out with your favorite REST API client or use the following `curl` commands:
-
-```
-curl -X GET -i 'http://192.168.0.43/gpio/2'
-curl -X PUT -i 'http://192.168.0.43/gpio/2' --data 0
-curl -X PUT -i 'http://192.168.0.43/gpio/2' --data 1
-```
-
-You can even get fancier by importing the `json` package so your API can return data like this: `{"value": 125, "units": "millivolts"}` Just specify the content-type with your function's return value.
-
-Like this: 
-
-```py
-@app.route('/adc/0')
-def get_adc_0(req):
-    return json.dumps({ "value": int(adc_0.read_uv() / 1000), "units": "millivolts" }), 200, 'application/json'
-```
-
-Wildcard routes are also possible, but limited to one matching parameter written as a regular expression.
-
-For example, the regex in the route below will match any integer at the end of the URL and pass it as a function argument:
-
-```py
-@app.route('/grenade/antioch/holy/([0-9+])$', methods=['GET'])
-def get_count(req, num):
-    return f'and the number of the counting shall be {num}'
-```
-
-Any of the following URLs will match the route
-* /grenade/antioch/holy/2
-* /grenade/antioch/holy/3
-* /grenade/antioch/holy/2048
-
-The value for `num` passed to `get_count(req, num)` will be 2, 3, and 2048 respectively. `/grenade/antioch/holy/([0-9])$` could be used to limit the match to a single digit. But, since the [MicroPython re module](https://docs.micropython.org/en/latest/library/re.html) is a subset of CPython, `/grenade/antioch/holy/([0-9]{1,2})$` to match one or two digits is right out. Counted repetitions are not supported in MicroPython.
-
-See [the wiki](https://github.com/DavesCodeMusings/thimble/wiki) for more examples in a step by step tutorial format.
+See [the wiki](https://github.com/DavesCodeMusings/thimble/wiki) for examples in a step by step tutorial format.
 
 ## Can it serve static web pages?
 As we say here in Wisconsin: "Oh yah, you betcha!" You can put your static files in `/static` on your flash filesystem and they will be served up just like any other web server, though a bit slower.
@@ -100,7 +40,7 @@ Using the example main.py assumes that networking is already configured by a boo
 Thimble is in the early phases of development and may have a few bugs lurking. If you find one, add a Github issue and I'll see if I can fix it.
 
 ## Will it run on Microcontroller X?
-Code is being developed and tested using an ESP32-C3 devkit with MicroPython 1.21. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) clone. It may or may not work with other devices.
+Code is being developed and tested using an ESP32-C3 devkit with MicroPython 1.21. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) or a NodeMCU ESP-12E (ESP8266). It may or may not work with other devices.
 
 ## How do I install it?
 Using mpremote on Windows, do this:

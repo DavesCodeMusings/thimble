@@ -1,4 +1,4 @@
-name: Build
+name: mpy build
 on: push
 env:
   SRC_FILE: thimble.py

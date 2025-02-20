@@ -392,19 +392,20 @@ class Thimble:
         Returns:
             nothing
         """
-        client_ip = writer.get_extra_info('peername')[0]
+        remote_addr = writer.get_extra_info('peername')[0]
         if self.debug:
-            print(f'Connection from client: {client_ip}')
+            print(f'Connection from client: {remote_addr}')
 
         try:
             req_buffer = await reader.read(self.req_buffer_size)
             req = await Thimble.parse_http_request(req_buffer)
-            if self.debug:
-                print(f'Request: {req}')
         except Exception as ex:
             await self.send_error(400, writer)
             print(f'Unable to parse request: {ex}')
         else:
+            req['remote_addr'] = remote_addr
+            if self.debug:
+                print(f'Request: {req}')
             route_value = self.resolve_route(req['method'] + req['path'])
             if isinstance(route_value, tuple):  # a function and URL wildcard value were returned
                 await self.send_function_results(route_value[0], req, route_value[1], writer)
@@ -422,7 +423,7 @@ class Thimble:
         reader.close()
         await reader.wait_closed()
         if self.debug:
-            print(f'Connection closed for {client_ip}')
+            print(f'Connection closed for {remote_addr}')
 
     def run(self, host='0.0.0.0', port=80, loop=None, debug=False):
         """

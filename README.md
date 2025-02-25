@@ -4,7 +4,7 @@ A tiny web framework for MicroPython.
 [![Build thimble](https://github.com/DavesCodeMusings/thimble/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/DavesCodeMusings/thimble/actions/workflows/build.yml)
 
 ## What is it?
-Thimble is similar in spirit to Flask, but scaled way back to fit on a microcontroller. Basically, you can create a web application using functions and routes. It's more robust than the typical MicroPython web server example code. But, there's a lot of features it lacks when compared to a full-featured web application framework. Still, for something that runs on an eight dollar microcontroller, it's pretty sweet.
+Thimble is similar in spirit to Flask, but scaled way back to fit on a microcontroller. Basically, you can create a web application using functions and routes. It's more robust than the typical MicroPython web server example code. But, there's a lot of features it lacks when compared to a full-featured web application framework. Still, for something that runs on a five dollar microcontroller, it's pretty sweet.
 
 ## How can I use it?
 Copy thimble.py to your MicroPython powered microcontroller (or install with MIP). Use main.py to test. Customize with your own functions and routes.
@@ -37,10 +37,10 @@ You can save space by compressing static files with GZIP and adding a `.gzip` ex
 ## What pitfalls do I need to be aware of?
 Using the example main.py assumes that networking is already configured by a boot.py that you supply. Thimble won't work without it. If you need help with wifi connections, see my example under [lolin32oled](https://github.com/DavesCodeMusings/esp/tree/main/lolin32oled)
 
-Thimble is in the early phases of development and may have a few bugs lurking. If you find one, add a Github issue and I'll see if I can fix it.
+Thimble has been around for a while, but may have a few bugs lurking. If you find one, add a Github issue and I'll see if I can fix it.
 
 ## Will it run on Microcontroller X?
-Code is being developed and tested using an ESP32-C3 devkit with MicroPython 1.21. Occasionally, I will run it on a Wemos LOLIN32 (ESP32) or a NodeMCU ESP-12E (ESP8266). It may or may not work with other devices.
+Code is being developed and tested using an ESP32 Devkit V1 clone with MicroPython 1.24. Occasionally, I will run it on an ESP32-C3 or ESP8266. It may or may not work with other devices.
 
 ## How do I install it?
 Using mpremote on Windows, do this:

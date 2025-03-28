@@ -7,9 +7,11 @@ A tiny web framework for MicroPython.
 Thimble is similar in spirit to Flask, but scaled way back to fit on a microcontroller. Basically, you can create a web application using functions and routes. It's more robust than the typical MicroPython web server example code. But, there's a lot of features it lacks when compared to a full-featured web application framework. Still, for something that runs on a five dollar microcontroller, it's pretty sweet.
 
 ## How can I use it?
+Thimble is a class with a route() method and a run() method. You add routes similar to the way you would with Flask and then call a run() method to start listening.
+
 Copy thimble.py to your MicroPython powered microcontroller (or install with MIP). Use main.py to test. Customize with your own functions and routes.
 
-Thimble is a class with a route() method and a run() method. You add routes similar to the way you would with Flask and then call a run() method to start listening.
+Contents of main.py:
 
 ```py
 from thimble import Thimble

@@ -16,14 +16,18 @@ from thimble import Thimble
 
 app = Thimble() 
 
-@app.route('/')
+@app.route("/")
 def hello(req):
-    return 'Hello World'
+    return "Hello World"
 
-app.run()
+@app.route("/gpio/<digit>")
+def gpio(req, num):
+    return f"Hello GPIO {num}"
+
+app.run(debug=True)
 ```
 
-Now, point your web browser to the IP of your device on the default port of 80 and you should see 'Hello World'.
+Now, point your web browser to the IP of your device on the default port of 80 and you should see 'Hello World'. Using the URL path of _/gpio/2_ should return 'Hello GPIO 2'.
 
 There are more complex examples in the [examples](https://github.com/DavesCodeMusings/thimble/examples) subdirectory.
 

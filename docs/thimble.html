@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.5">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>thimble API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
@@ -409,28 +409,41 @@ el.replaceWith(d);
 
         return add_route
 
-    def resolve_route(self, route_pattern):
+    def resolve_route(self, route_candidate):
         &#34;&#34;&#34;
         Given a route pattern (METHOD + url_path), look up the corresponding function.
 
         Args:
-            route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
+            route_candidate (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
 
         Returns:
             object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
         &#34;&#34;&#34;
         result = None
-        if route_pattern in self.routes:  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
-            result = self.routes[route_pattern]
+        if self.debug:
+            print(&#34;Looking for a route matching:&#34;, route_candidate)
+        if route_candidate in self.routes:  # pattern is a non-regex string, like: &#39;GET/gpio/2&#39;
+            if self.debug:
+                print(&#34;Route table had an exact match. We&#39;re done!&#34;)
+            result = self.routes[route_candidate]
         else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
-            for key in self.routes.keys():
-                regex_match = match(key, route_pattern)
+            if self.debug:
+                print(&#34;No exact match in route table. Looking for regex matches...&#34;)
+            for stored_route in self.routes.keys():
+                if self.debug:
+                    print(&#34;Examining this route table entry for potential match:&#34;, stored_route)
+                regex_match = search(&#34;^&#34; + stored_route + &#34;$&#34;, route_candidate)
                 if regex_match:
-                    func = self.routes[key]
+                    if self.debug:
+                        print(&#34;Found a regex match with:&#34;, stored_route)
+                    func = self.routes[stored_route]
                     wildcard_value = regex_match.group(1)
                     if self.debug:
-                        print(f&#39;Wildcard match: {wildcard_value}&#39;)
+                        print(f&#39;Extracted wildcard value: {wildcard_value}&#39;)
                     result = func, wildcard_value
+                else:
+                    if self.debug:
+                        print(&#34;No match.&#34;)
 
         return result
 
@@ -935,42 +948,55 @@ def read_file_chunk(file):
 <p>nothing</p></div>
 </dd>
 <dt id="thimble.Thimble.resolve_route"><code class="name flex">
-<span>def <span class="ident">resolve_route</span></span>(<span>self, route_pattern)</span>
+<span>def <span class="ident">resolve_route</span></span>(<span>self, route_candidate)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def resolve_route(self, route_pattern):
+<pre><code class="python">def resolve_route(self, route_candidate):
     &#34;&#34;&#34;
     Given a route pattern (METHOD + url_path), look up the corresponding function.
 
     Args:
-        route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
+        route_candidate (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
 
     Returns:
         object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
     &#34;&#34;&#34;
     result = None
-    if route_pattern in self.routes:  # pattern is a fixed string, like: &#39;GET/gpio/2&#39;
-        result = self.routes[route_pattern]
+    if self.debug:
+        print(&#34;Looking for a route matching:&#34;, route_candidate)
+    if route_candidate in self.routes:  # pattern is a non-regex string, like: &#39;GET/gpio/2&#39;
+        if self.debug:
+            print(&#34;Route table had an exact match. We&#39;re done!&#34;)
+        result = self.routes[route_candidate]
     else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
-        for key in self.routes.keys():
-            regex_match = match(key, route_pattern)
+        if self.debug:
+            print(&#34;No exact match in route table. Looking for regex matches...&#34;)
+        for stored_route in self.routes.keys():
+            if self.debug:
+                print(&#34;Examining this route table entry for potential match:&#34;, stored_route)
+            regex_match = search(&#34;^&#34; + stored_route + &#34;$&#34;, route_candidate)
             if regex_match:
-                func = self.routes[key]
+                if self.debug:
+                    print(&#34;Found a regex match with:&#34;, stored_route)
+                func = self.routes[stored_route]
                 wildcard_value = regex_match.group(1)
                 if self.debug:
-                    print(f&#39;Wildcard match: {wildcard_value}&#39;)
+                    print(f&#39;Extracted wildcard value: {wildcard_value}&#39;)
                 result = func, wildcard_value
+            else:
+                if self.debug:
+                    print(&#34;No match.&#34;)
 
     return result</code></pre>
 </details>
 <div class="desc"><p>Given a route pattern (METHOD + url_path), look up the corresponding function.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>route_pattern</code></strong> :&ensp;<code>string</code></dt>
+<dt><strong><code>route_candidate</code></strong> :&ensp;<code>string</code></dt>
 <dd>An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -1288,7 +1314,7 @@ for conserving limited flash filesystem space.</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>

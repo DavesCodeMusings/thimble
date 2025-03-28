@@ -1,6 +1,6 @@
 from asyncio import get_event_loop, start_server
 from os import stat
-from re import match, search
+from re import search
 
 class Thimble:
     """
@@ -356,28 +356,41 @@ class Thimble:
 
         return add_route
 
-    def resolve_route(self, route_pattern):
+    def resolve_route(self, route_candidate):
         """
         Given a route pattern (METHOD + url_path), look up the corresponding function.
 
         Args:
-            route_pattern (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
+            route_candidate (string): An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)
 
         Returns:
             object: reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)
         """
         result = None
-        if route_pattern in self.routes:  # pattern is a fixed string, like: 'GET/gpio/2'
-            result = self.routes[route_pattern]
+        if self.debug:
+            print("Looking for a route matching:", route_candidate)
+        if route_candidate in self.routes:  # pattern is a non-regex string, like: 'GET/gpio/2'
+            if self.debug:
+                print("Route table had an exact match. We're done!")
+            result = self.routes[route_candidate]
         else:  # pattern may contain regex, like 'GET/gpio/([0-9]+)'
-            for key in self.routes.keys():
-                regex_match = match(key, route_pattern)
+            if self.debug:
+                print("No exact match in route table. Looking for regex matches...")
+            for stored_route in self.routes.keys():
+                if self.debug:
+                    print("Examining this route table entry for potential match:", stored_route)
+                regex_match = search("^" + stored_route + "$", route_candidate)
                 if regex_match:
-                    func = self.routes[key]
+                    if self.debug:
+                        print("Found a regex match with:", stored_route)
+                    func = self.routes[stored_route]
                     wildcard_value = regex_match.group(1)
                     if self.debug:
-                        print(f'Wildcard match: {wildcard_value}')
+                        print(f'Extracted wildcard value: {wildcard_value}')
                     result = func, wildcard_value
+                else:
+                    if self.debug:
+                        print("No match.")
 
         return result
 
@@ -451,3 +464,4 @@ class Thimble:
             loop.create_task(server)
 
         return loop
+    

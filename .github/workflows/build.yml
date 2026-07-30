@@ -1,5 +1,7 @@
 name: mpy build
-on: push
+on:
+  push:
+  workflow_dispatch:
 env:
   SRC_FILE: thimble.py
 permissions:

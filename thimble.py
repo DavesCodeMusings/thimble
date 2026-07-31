@@ -416,7 +416,7 @@ class Thimble:
         try:
             req_buffer = await reader.read(self.req_buffer_size)
             req = await Thimble.parse_http_request(req_buffer)
-        except Exception as ex:
+        except Exception as ex:  # noqa: BLE001
             await self.send_error(400, writer)
             print(f'Unable to parse request: {ex}')
         else:

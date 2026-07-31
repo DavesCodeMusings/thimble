@@ -342,10 +342,10 @@ class Thimble:
             methods = ['GET']
 
         regex_macros = {
-            '<digit>': '([0-9])',
-            '<float>': '([-+]?[0-9]*\.?[0-9]+)',
-            '<int>': '([0-9]+)',
-            '<string>': '(.*)'
+            '<digit>': r'([0-9])',
+            '<float>': r'([-+]?[0-9]*\.?[0-9]+)',
+            '<int>': r'([0-9]+)',
+            '<string>': r'(.*)'
         }
 
         regex_match = search('(<.*>)', url_path)

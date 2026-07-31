@@ -380,7 +380,7 @@ class Thimble:
         else:  # pattern may contain regex, like 'GET/gpio/([0-9]+)'
             if self.debug:
                 print("No exact match in route table. Looking for regex matches...")
-            for stored_route in self.routes.keys():
+            for stored_route in self.routes:
                 if self.debug:
                     print("Examining this route table entry for potential match:", stored_route)
                 regex_match = search("^" + stored_route + "$", route_candidate)

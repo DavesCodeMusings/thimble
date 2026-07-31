@@ -311,14 +311,14 @@ class Thimble:
         if file_gzip_size is not None and 'accept-encoding' in req['headers'] and 'gzip' in req['headers']['accept-encoding'].lower():
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding='gzip'))
-            with open(file_path + '.gzip', 'rb') as file:
+            with open(file_path + '.gzip', 'rb') as file:  # noqa: ASYNC230 There is no aiofiles for MicroPython
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()  # drain immediately after write to avoid memory allocation errors
         elif file_size is not None:  # a non-compressed file was found
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
-            with open(file_path, 'rb') as file:
+            with open(file_path, 'rb') as file:  # noqa: ASYNC230 There is no aiofiles for MicroPython
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()

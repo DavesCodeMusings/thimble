@@ -326,9 +326,10 @@ class Thimble:
             await self.send_error(404, writer)
             print(f'Error reading file: {file_path}')
 
-    def route(self, url_path, methods=['GET']):
+    def route(self, url_path, methods=None):
         """
         Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
+        If no methods are passed, default to GET.
 
         Args:
             url_path (string): path portion of a URL (ex. '/path/to/thing') that will trigger a call to the function
@@ -337,6 +338,9 @@ class Thimble:
         Returns:
             object: wrapper function
         """
+        if methods == None:
+            methods = ['GET']
+
         regex_macros = {
             '<digit>': '([0-9])',
             '<float>': '([-+]?[0-9]*\.?[0-9]+)',

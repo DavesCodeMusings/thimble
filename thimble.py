@@ -214,8 +214,7 @@ class Thimble:
                     func_result = func(req, url_wildcard)
                 else:
                     func_result = func(req)
-
-        except Exception as ex:
+        except Exception as ex:  # noqa: BLE001
             await self.send_error(500, writer)
             print(f'Function call failed: {ex}')
         else:

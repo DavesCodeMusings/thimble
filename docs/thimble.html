@@ -218,9 +218,9 @@ el.replaceWith(d);
         Returns:
             boolean: True if the function was defined as asynchronous, False if not, and None if unknown
         &#34;&#34;&#34;
-        if type(func) == type(Thimble.on_connect):  # noqa: E721
+        if type(func) == type(Thimble.on_connect):
             return True  # It&#39;s an async function
-        elif type(func) == type(Thimble.run):  # noqa: E721
+        elif type(func) == type(Thimble.run):
             return False  # It&#39;s a regular function
         else:
             return None  # It&#39;s not a function
@@ -266,8 +266,7 @@ el.replaceWith(d);
                     func_result = func(req, url_wildcard)
                 else:
                     func_result = func(req)
-
-        except Exception as ex:
+        except Exception as ex:  # noqa: BLE001
             await self.send_error(500, writer)
             print(f&#39;Function call failed: {ex}&#39;)
         else:
@@ -364,14 +363,14 @@ el.replaceWith(d);
         if file_gzip_size is not None and &#39;accept-encoding&#39; in req[&#39;headers&#39;] and &#39;gzip&#39; in req[&#39;headers&#39;][&#39;accept-encoding&#39;].lower():
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding=&#39;gzip&#39;))
-            with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:
+            with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:  # noqa: ASYNC230 There is no aiofiles for MicroPython
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()  # drain immediately after write to avoid memory allocation errors
         elif file_size is not None:  # a non-compressed file was found
             writer.write(await Thimble.http_status_line(200))
             writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
-            with open(file_path, &#39;rb&#39;) as file:
+            with open(file_path, &#39;rb&#39;) as file:  # noqa: ASYNC230 There is no aiofiles for MicroPython
                 for chunk in Thimble.read_file_chunk(file):
                     writer.write(chunk)
                     await writer.drain()
@@ -379,9 +378,10 @@ el.replaceWith(d);
             await self.send_error(404, writer)
             print(f&#39;Error reading file: {file_path}&#39;)
 
-    def route(self, url_path, methods=[&#39;GET&#39;]):
+    def route(self, url_path, methods=None):
         &#34;&#34;&#34;
         Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
+        If no methods are passed, default to GET.
 
         Args:
             url_path (string): path portion of a URL (ex. &#39;/path/to/thing&#39;) that will trigger a call to the function
@@ -390,11 +390,14 @@ el.replaceWith(d);
         Returns:
             object: wrapper function
         &#34;&#34;&#34;
+        if methods == None:
+            methods = [&#39;GET&#39;]
+
         regex_macros = {
-            &#39;&lt;digit&gt;&#39;: &#39;([0-9])&#39;,
-            &#39;&lt;float&gt;&#39;: &#39;([-+]?[0-9]*\.?[0-9]+)&#39;,
-            &#39;&lt;int&gt;&#39;: &#39;([0-9]+)&#39;,
-            &#39;&lt;string&gt;&#39;: &#39;(.*)&#39;
+            &#39;&lt;digit&gt;&#39;: r&#39;([0-9])&#39;,
+            &#39;&lt;float&gt;&#39;: r&#39;([-+]?[0-9]*\.?[0-9]+)&#39;,
+            &#39;&lt;int&gt;&#39;: r&#39;([0-9]+)&#39;,
+            &#39;&lt;string&gt;&#39;: r&#39;(.*)&#39;
         }
 
         regex_match = search(&#39;(&lt;.*&gt;)&#39;, url_path)
@@ -429,7 +432,7 @@ el.replaceWith(d);
         else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
             if self.debug:
                 print(&#34;No exact match in route table. Looking for regex matches...&#34;)
-            for stored_route in self.routes.keys():
+            for stored_route in self.routes:
                 if self.debug:
                     print(&#34;Examining this route table entry for potential match:&#34;, stored_route)
                 regex_match = search(&#34;^&#34; + stored_route + &#34;$&#34;, route_candidate)
@@ -465,7 +468,7 @@ el.replaceWith(d);
         try:
             req_buffer = await reader.read(self.req_buffer_size)
             req = await Thimble.parse_http_request(req_buffer)
-        except Exception as ex:
+        except Exception as ex:  # noqa: BLE001
             await self.send_error(400, writer)
             print(f&#39;Unable to parse request: {ex}&#39;)
         else:
@@ -556,13 +559,15 @@ async def file_size(file_path):
     return size</code></pre>
 </details>
 <div class="desc"><p>Given a path to a file, return the file's size or None if there's an exception when checking.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_path</code></strong> :&ensp;<code>string</code></dt>
 <dd>a fully-qualified path to the location of the file</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>file size in bytes or None if there was a problem obtaining the size (e.g. file does not exist)</p></div>
+<p>Returns
+-----=
+file size in bytes or None if there was a problem obtaining the size (e.g. file does not exist)</p></div>
 </dd>
 <dt id="thimble.Thimble.http_headers"><code class="name flex">
 <span>async def <span class="ident">http_headers</span></span>(<span>content_length=0, content_type='', content_encoding='')</span>
@@ -597,16 +602,18 @@ async def http_headers(content_length=0, content_type=&#39;&#39;, content_encodi
     return headers</code></pre>
 </details>
 <div class="desc"><p>Generate appropriate HTTP response headers based on content properties</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>content_length</code></strong> :&ensp;<code>int</code></dt>
 <dd>length of body, used for Content-Length header</dd>
 <dt><strong><code>content_type</code></strong> :&ensp;<code>string</code></dt>
 <dd>media-type of body, used for Content-Type header</dd>
 </dl>
 <p>content_encoding(string): compression type, used for Content-Encoding header</p>
-<h2 id="returns">Returns</h2>
 <dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>string</code></dt>
 <dd>HTTP headers separated by</dd>
 </dl></div>
@@ -644,13 +651,13 @@ async def http_status_line(status_code):
     return f&#39;HTTP/1.1 {http_status_message[status_code]}\r\n&#39;</code></pre>
 </details>
 <div class="desc"><p>Given an HTTP status code (e.g. 200, 404, etc.), format the server response status line</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>status_code</code></strong> :&ensp;<code>int</code></dt>
 <dd>the HTTP status code as defined by RFC 7231 Respone Status Codes (ex. 200)</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>string</code></dt>
 <dd>HTTP status line with protocol version, numeric status code, and corresponding status text</dd>
 </dl></div>
@@ -674,21 +681,21 @@ def is_async(func):
     Returns:
         boolean: True if the function was defined as asynchronous, False if not, and None if unknown
     &#34;&#34;&#34;
-    if type(func) == type(Thimble.on_connect):  # noqa: E721
+    if type(func) == type(Thimble.on_connect):
         return True  # It&#39;s an async function
-    elif type(func) == type(Thimble.run):  # noqa: E721
+    elif type(func) == type(Thimble.run):
         return False  # It&#39;s a regular function
     else:
         return None  # It&#39;s not a function</code></pre>
 </details>
 <div class="desc"><p>Determine if a function is async not by comparing its type to known async and regular functions.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>func</code></strong> :&ensp;<code>object</code></dt>
 <dd>a reference to the function being examined</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>boolean</code></dt>
 <dd>True if the function was defined as asynchronous, False if not, and None if unknown</dd>
 </dl></div>
@@ -746,18 +753,17 @@ async def parse_http_request(req_buffer):
     return req</code></pre>
 </details>
 <div class="desc"><p>Given a raw HTTP request, return a dictionary with individual elements broken out</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>req_buffer</code></strong> :&ensp;<code>bytes</code></dt>
 <dd>the unprocessed HTTP request sent from the client</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
+<dt>Raises</dt>
+<dt>-----=</dt>
 <dt><code>exception</code></dt>
 <dd>when the request buffer is empty</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>dictionary</code></dt>
 <dd>key/value pairs including, but not limited to method, path, query, headers, body, etc.
 or None type if parsing fails</dd>
@@ -796,13 +802,13 @@ def parse_query_string(query_string):
 </details>
 <div class="desc"><p>Split a URL's query string into individual key/value pairs
 (ex: 'pet=Panda&amp;color=Red' becomes { "pet": "panda", "color": "red"}</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>query_string</code></strong> :&ensp;<code>string</code></dt>
 <dd>the query string portion of a URL (without the leading ? delimiter)</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>dictionary</code></dt>
 <dd>key/value pairs</dd>
 </dl></div>
@@ -834,13 +840,13 @@ def read_file_chunk(file):
             return</code></pre>
 </details>
 <div class="desc"><p>Given a file handle, read the file in small chunks to avoid large buffer requirements.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file</code></strong> :&ensp;<code>object</code></dt>
 <dd>the file handle returned by open()</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>bytes</code></dt>
 <dd>a chunk of the file until the file ends, then nothing</dd>
 </dl></div>
@@ -873,13 +879,13 @@ def read_file_chunk(file):
         return self.media_types[file_ext]</code></pre>
 </details>
 <div class="desc"><p>Return a standard media type / subtype based on file extension</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_path</code></strong> :&ensp;<code>string</code></dt>
 <dd>file name or full path</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>string</code></dt>
 <dd>media type as registered with the Internet Assigned Numbers Authority (IANA)</dd>
 </dl></div>
@@ -910,7 +916,7 @@ def read_file_chunk(file):
     try:
         req_buffer = await reader.read(self.req_buffer_size)
         req = await Thimble.parse_http_request(req_buffer)
-    except Exception as ex:
+    except Exception as ex:  # noqa: BLE001
         await self.send_error(400, writer)
         print(f&#39;Unable to parse request: {ex}&#39;)
     else:
@@ -937,15 +943,17 @@ def read_file_chunk(file):
         print(f&#39;Connection closed for {remote_addr}&#39;)</code></pre>
 </details>
 <div class="desc"><p>Connection handler for new client requests.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>reader</code></strong> :&ensp;<code>stream</code></dt>
 <dd>input received from the client</dd>
 <dt><strong><code>writer</code></strong> :&ensp;<code>stream</code></dt>
 <dd>output to be sent to the client</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>nothing</p></div>
+<p>Returns
+-----=
+nothing</p></div>
 </dd>
 <dt id="thimble.Thimble.resolve_route"><code class="name flex">
 <span>def <span class="ident">resolve_route</span></span>(<span>self, route_candidate)</span>
@@ -975,7 +983,7 @@ def read_file_chunk(file):
     else:  # pattern may contain regex, like &#39;GET/gpio/([0-9]+)&#39;
         if self.debug:
             print(&#34;No exact match in route table. Looking for regex matches...&#34;)
-        for stored_route in self.routes.keys():
+        for stored_route in self.routes:
             if self.debug:
                 print(&#34;Examining this route table entry for potential match:&#34;, stored_route)
             regex_match = search(&#34;^&#34; + stored_route + &#34;$&#34;, route_candidate)
@@ -994,28 +1002,29 @@ def read_file_chunk(file):
     return result</code></pre>
 </details>
 <div class="desc"><p>Given a route pattern (METHOD + url_path), look up the corresponding function.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>route_candidate</code></strong> :&ensp;<code>string</code></dt>
 <dd>An uppercase HTTP method concatenated with a URL path wich may contain regex (ex: GET/gpio/([0-9+])$)</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>object</code></dt>
 <dd>reference to function (for non-regex URLs) or tuple with function and regex capture (for regex URLs)</dd>
 </dl></div>
 </dd>
 <dt id="thimble.Thimble.route"><code class="name flex">
-<span>def <span class="ident">route</span></span>(<span>self, url_path, methods=['GET'])</span>
+<span>def <span class="ident">route</span></span>(<span>self, url_path, methods=None)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def route(self, url_path, methods=[&#39;GET&#39;]):
+<pre><code class="python">def route(self, url_path, methods=None):
     &#34;&#34;&#34;
     Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
+    If no methods are passed, default to GET.
 
     Args:
         url_path (string): path portion of a URL (ex. &#39;/path/to/thing&#39;) that will trigger a call to the function
@@ -1024,11 +1033,14 @@ def read_file_chunk(file):
     Returns:
         object: wrapper function
     &#34;&#34;&#34;
+    if methods == None:
+        methods = [&#39;GET&#39;]
+
     regex_macros = {
-        &#39;&lt;digit&gt;&#39;: &#39;([0-9])&#39;,
-        &#39;&lt;float&gt;&#39;: &#39;([-+]?[0-9]*\.?[0-9]+)&#39;,
-        &#39;&lt;int&gt;&#39;: &#39;([0-9]+)&#39;,
-        &#39;&lt;string&gt;&#39;: &#39;(.*)&#39;
+        &#39;&lt;digit&gt;&#39;: r&#39;([0-9])&#39;,
+        &#39;&lt;float&gt;&#39;: r&#39;([-+]?[0-9]*\.?[0-9]+)&#39;,
+        &#39;&lt;int&gt;&#39;: r&#39;([0-9]+)&#39;,
+        &#39;&lt;string&gt;&#39;: r&#39;(.*)&#39;
     }
 
     regex_match = search(&#39;(&lt;.*&gt;)&#39;, url_path)
@@ -1043,16 +1055,17 @@ def read_file_chunk(file):
 
     return add_route</code></pre>
 </details>
-<div class="desc"><p>Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.</p>
-<h2 id="args">Args</h2>
+<div class="desc"><p>Given a URL path and list of zero or more HTTP methods, add the decorated function to the route table.
+If no methods are passed, default to GET.</p>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>url_path</code></strong> :&ensp;<code>string</code></dt>
 <dd>path portion of a URL (ex. '/path/to/thing') that will trigger a call to the function</dd>
 <dt><strong><code>methods</code></strong> :&ensp;<code>list</code></dt>
 <dd>a list of any HTTP methods (eg. ['GET', 'PUT']) that are used to trigger the call</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>object</code></dt>
 <dd>wrapper function</dd>
 </dl></div>
@@ -1093,8 +1106,9 @@ def read_file_chunk(file):
     return loop</code></pre>
 </details>
 <div class="desc"><p>Start an asynchronous listener for HTTP requests.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>host</code></strong> :&ensp;<code>string</code></dt>
 <dd>the IP address of the interface on which to listen</dd>
 <dt><strong><code>port</code></strong> :&ensp;<code>int</code></dt>
@@ -1103,9 +1117,8 @@ def read_file_chunk(file):
 <dd>the asyncio loop that the server should insert itself into</dd>
 <dt><strong><code>debug</code></strong> :&ensp;<code>boolean</code></dt>
 <dd>a flag to indicate verbose logging is desired</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>object</code></dt>
 <dd>the same loop object given as a parameter or a new one if no existing loop was passed</dd>
 </dl></div>
@@ -1136,15 +1149,17 @@ def read_file_chunk(file):
     await writer.drain()</code></pre>
 </details>
 <div class="desc"><p>Given a stream and an HTTP error number, send a friendly text error message.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>error_number</code></strong> :&ensp;<code>integer</code></dt>
 <dd>HTTP status code</dd>
 <dt><strong><code>writer</code></strong> :&ensp;<code>object</code></dt>
 <dd>the asyncio Stream object to which the file should be sent</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>nothing</p></div>
+<p>Returns
+-----=
+nothing</p></div>
 </dd>
 <dt id="thimble.Thimble.send_file_contents"><code class="name flex">
 <span>async def <span class="ident">send_file_contents</span></span>(<span>self, file_path, req, writer)</span>
@@ -1176,14 +1191,14 @@ def read_file_chunk(file):
     if file_gzip_size is not None and &#39;accept-encoding&#39; in req[&#39;headers&#39;] and &#39;gzip&#39; in req[&#39;headers&#39;][&#39;accept-encoding&#39;].lower():
         writer.write(await Thimble.http_status_line(200))
         writer.write(await Thimble.http_headers(content_length=file_gzip_size, content_type=file_type, content_encoding=&#39;gzip&#39;))
-        with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:
+        with open(file_path + &#39;.gzip&#39;, &#39;rb&#39;) as file:  # noqa: ASYNC230 There is no aiofiles for MicroPython
             for chunk in Thimble.read_file_chunk(file):
                 writer.write(chunk)
                 await writer.drain()  # drain immediately after write to avoid memory allocation errors
     elif file_size is not None:  # a non-compressed file was found
         writer.write(await Thimble.http_status_line(200))
         writer.write(await Thimble.http_headers(content_length=file_size, content_type=file_type))
-        with open(file_path, &#39;rb&#39;) as file:
+        with open(file_path, &#39;rb&#39;) as file:  # noqa: ASYNC230 There is no aiofiles for MicroPython
             for chunk in Thimble.read_file_chunk(file):
                 writer.write(chunk)
                 await writer.drain()
@@ -1195,15 +1210,17 @@ def read_file_chunk(file):
 If client accepts gzip encoding, and a file of the same name with a .gzip extension appended
 exists, the gzipped version will be sent. This is not so much for speeding up transfer as it
 for conserving limited flash filesystem space.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_path</code></strong> :&ensp;<code>string</code></dt>
 <dd>fully-qualified path to file</dd>
 <dt><strong><code>writer</code></strong> :&ensp;<code>object</code></dt>
 <dd>the asyncio Stream object to which the file should be sent</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>nothing</p></div>
+<p>Returns
+-----=
+nothing</p></div>
 </dd>
 <dt id="thimble.Thimble.send_function_results"><code class="name flex">
 <span>async def <span class="ident">send_function_results</span></span>(<span>self, func, req, url_wildcard, writer)</span>
@@ -1237,8 +1254,7 @@ for conserving limited flash filesystem space.</p>
                 func_result = func(req, url_wildcard)
             else:
                 func_result = func(req)
-
-    except Exception as ex:
+    except Exception as ex:  # noqa: BLE001
         await self.send_error(500, writer)
         print(f&#39;Function call failed: {ex}&#39;)
     else:
@@ -1261,8 +1277,9 @@ for conserving limited flash filesystem space.</p>
         await writer.drain()</code></pre>
 </details>
 <div class="desc"><p>Execute the given function with the HTTP reqest parameters as an argument and send the results as an HTTP reply</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>func</code></strong> :&ensp;<code>object</code></dt>
 <dd>reference to the function to be executed or a tuple of function and URL wildcard</dd>
 <dt><strong><code>req</code></strong> :&ensp;<code>dictionary</code></dt>
@@ -1272,8 +1289,9 @@ for conserving limited flash filesystem space.</p>
 <dt><strong><code>writer</code></strong> :&ensp;<code>object</code></dt>
 <dd>the asyncio Stream object to which the results should be sent</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>nothing</p></div>
+<p>Returns
+-----=
+nothing</p></div>
 </dd>
 </dl>
 </dd>
